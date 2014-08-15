@@ -1,0 +1,4 @@
+{
+  "src/*": { "alternate": "test/{}" },
+  "test/*": { "alternate": "src/{}" }
+}

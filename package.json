@@ -20,5 +20,14 @@
   "bugs": {
     "url": "https://github.com/mtscout6/react-router-flux/issues"
   },
-  "homepage": "https://github.com/mtscout6/react-router-flux"
+  "homepage": "https://github.com/mtscout6/react-router-flux",
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "coffee-script": "^1.7.1",
+    "mocha": "^1.21.4"
+  },
+  "dependencies": {
+    "react": "^0.11.1",
+    "react-dispatcher": "^0.2.0"
+  }
 }
