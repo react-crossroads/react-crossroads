@@ -23,6 +23,7 @@
   "homepage": "https://github.com/mtscout6/react-router-flux",
   "devDependencies": {
     "chai": "^1.9.1",
+    "chai-as-promised": "^4.1.1",
     "chai-webdriver": "^0.9.1",
     "cjsx-loader": "^0.2.0",
     "coffee-loader": "^0.7.2",
