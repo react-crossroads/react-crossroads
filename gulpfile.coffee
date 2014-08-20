@@ -16,7 +16,7 @@ Ports =
 addressForPort = (port) ->
   "http://localhost:#{port}"
 
-gulp.task 'test-ci', ['test', 'integration-test']
+gulp.task 'test-ci', ['test'] #, 'integration-test'] # Punting on integration tests on travis for now
 
 gulp.task 'test', ->
   gulp.src './test/main.coffee', {read: false}
