@@ -11,12 +11,6 @@ exports.startServer = (config, callback) ->
 
   app.set 'port', port
 
-  #allow cross origin requests to web-dev-server
-  app.get '/*', (req, res, next) ->
-    res.header 'Access-Control-Allow-Origin', config.webpackServerAddress
-    res.header 'Access-Control-Allow-Headers', 'X-Requested-With'
-    next()
-
   forwardToWebpackServer = (req, res) ->
     url = "#{config.webpackServerAddress}#{req.url}"
     request(url).pipe(res)

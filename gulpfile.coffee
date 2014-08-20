@@ -16,6 +16,12 @@ Ports =
 addressForPort = (port) ->
   "http://localhost:#{port}"
 
+gulp.task 'test-ci', ['test', 'integration-test']
+
+gulp.task 'test', ->
+  gulp.src './test/main.coffee', {read: false}
+    .pipe mocha()
+
 gulp.task 'integration-test', ['integration-test-server'], ->
   gulp.src './integration-test/integration-test.coffee', {read: false}
     .pipe mocha()
