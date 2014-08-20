@@ -1,0 +1,20 @@
+path = require 'path'
+webpack = require 'webpack'
+
+module.exports =
+  cache: true
+  entry:
+    "hash-location-app": './integration-test/locations/HashLocation/hash-location-app.cjsx'
+    "history-location-app": './integration-test/locations/HistoryLocation/history-location-app.cjsx'
+  output:
+    path: path.join __dirname, 'integration-test'
+    filename: '[name].js'
+  module:
+    loaders: [
+      {test: /\.cjsx$/, loader: "coffee!cjsx"}
+      {test: /\.coffee$/, loader: "coffee"}
+    ]
+  resolve:
+    extensions: ['', '.coffee', '.cjsx', '.js']
+  plugins: [
+  ]
