@@ -9,9 +9,9 @@ chai = require 'chai'
 {expect} = chai
 chaiWebdriver = require 'chai-webdriver'
 chai.use chaiWebdriver(driver)
-chai.should()
+should = chai.should()
 
-_.extend global, {_, expect, webdriver, driver, chai, Key}
+_.extend global, {_, expect, should, webdriver, driver, chai, Key}
 
 require './locations/location-tests'
 

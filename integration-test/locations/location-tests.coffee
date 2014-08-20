@@ -7,9 +7,9 @@ sendText = (text) ->
         .then -> input.sendKeys text
 
 assertUrl = (path, url) ->
-  driver.getCurrentUrl()
+  expect('.current-path').dom.to.have.text path
+    .then -> driver.getCurrentUrl()
     .then (currentUrl) -> currentUrl.should.equal url
-    .then -> chai.expect('.current-path').dom.to.have.text path
 
 getCurrentUrlAndPath = ->
   startUrl = null
@@ -52,6 +52,19 @@ replace = (path, expectUrlPrefix, thorough=true) ->
       .then -> sendText path
       .then -> driver.findElement(webdriver.By.id('replace')).click()
 
+goback = (prevPath, prevUrl) ->
+  startUrl = null
+  startPath = null
+
+  getCurrentUrlAndPath()
+    .then (current) -> {startUrl, startPath} = current
+    .then -> driver.findElement(webdriver.By.id('goback')).click()
+    .then -> assertUrl prevPath, prevUrl
+    .then -> driver.navigate().forward()
+    .then -> assertUrl startPath, startUrl
+    .then -> driver.navigate().back()
+    .then -> assertUrl prevPath, prevUrl
+
 describe 'hash location', ->
   hashRoot = "#{root}hash-location-app"
   hashUrlPrefix = "#{root}hash-location-app#"
@@ -60,18 +73,27 @@ describe 'hash location', ->
     driver.get hashRoot
 
   it 'the default path is /', ->
-    chai.expect('.current-path').dom.to.have.text '/'
+    expect('.current-path').dom.to.have.text '/'
       .then -> driver.getCurrentUrl()
       .then (url) -> url.should.equal "#{hashUrlPrefix}/"
 
   it 'push to /test', ->
-    chai.expect('.current-path').dom.to.have.text '/'
+    expect('.current-path').dom.to.have.text '/'
       .then -> push '/test', hashUrlPrefix
 
   it 'replace to /test', ->
     @timeout(3000)
-    chai.expect('.current-path').dom.to.have.text '/'
+    expect('.current-path').dom.to.have.text '/'
       .then -> replace '/test', hashUrlPrefix
+
+  it 'go back to /', ->
+    path = '/test'
+    url = "#{hashUrlPrefix}/test"
+
+    expect('.current-path').dom.to.have.text '/'
+      .then -> driver.get url
+      .then -> assertUrl path, url
+      .then -> goback '/', "#{hashUrlPrefix}/"
 
 describe 'history location', ->
   historyRoot = "#{root}history-location-app"
@@ -81,15 +103,24 @@ describe 'history location', ->
     driver.get historyRoot
 
   it 'the default path is /', ->
-    chai.expect('.current-path').dom.to.have.text '/'
+    expect('.current-path').dom.to.have.text '/'
       .then -> driver.getCurrentUrl()
       .then (url) -> url.should.equal historyRoot
 
   it 'push to /test', ->
-    chai.expect('.current-path').dom.to.have.text '/'
+    expect('.current-path').dom.to.have.text '/'
       .then -> push '/test', historyRoot
 
   it 'replace to /test', ->
     @timeout(3000)
-    chai.expect('.current-path').dom.to.have.text '/'
+    expect('.current-path').dom.to.have.text '/'
       .then -> replace '/test', historyRoot
+
+  it 'go back to /', ->
+    path = '/test'
+    url = "#{historyRoot}#{path}"
+
+    expect('.current-path').dom.to.have.text '/'
+      .then -> driver.get url
+      .then -> assertUrl path, url
+      .then -> goback '/', historyRoot
