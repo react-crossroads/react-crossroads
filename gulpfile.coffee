@@ -9,7 +9,9 @@ exit = require 'gulp-exit'
 webpack = require 'webpack'
 WebpackDevServer = require 'webpack-dev-server'
 
-webDevServerIntegrationTestPort = 3002
+Ports =
+  integration: 3002
+  integrationWebPack: 3003
 
 addressForPort = (port) ->
   "http://localhost:#{port}"
@@ -20,16 +22,21 @@ gulp.task 'integration-test', ['integration-test-server'], ->
     .pipe exit()
 
 gulp.task 'integration-test-server', (done) ->
-  integrationTestAddress = addressForPort webDevServerIntegrationTestPort
+  webpackServerAddress = addressForPort Ports.integrationWebPack
   config = require './webpack.integration.test'
 
-  server = new WebpackDevServer webpack(config),
+  webpackServer = new WebpackDevServer webpack(config),
     contentBase: path.join __dirname, 'integration-test'
     stats:
       colors: true
     hot: true
 
-  server.listen webDevServerIntegrationTestPort, "localhost", (err) ->
+  server = require('./integration-test/server').startServer
+    server:
+      port: Ports.integration
+    webpackServerAddress: webpackServerAddress
+
+  webpackServer.listen Ports.integrationWebPack, "localhost", (err) ->
     throw new util.PluginError "integration-test", err if err
-    util.log "[integration-test-server]", "#{integrationTestAddress}/webpack-dev-server"
+    util.log "[integration-test-server]", "#{webpackServerAddress}/webpack-dev-server"
     done()
