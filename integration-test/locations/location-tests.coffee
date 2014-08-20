@@ -124,3 +124,33 @@ describe 'history location', ->
       .then -> driver.get url
       .then -> assertUrl path, url
       .then -> goback '/', historyRoot
+
+describe 'refresh location', ->
+  refreshRoot = "#{root}refresh-location-app"
+  windowId = 0
+
+  beforeEach ->
+    driver.get refreshRoot
+
+  it 'the default path is /', ->
+    expect('.current-path').dom.to.have.text '/'
+      .then -> driver.getCurrentUrl()
+      .then (url) -> url.should.equal refreshRoot
+
+  it 'push to /test', ->
+    expect('.current-path').dom.to.have.text '/'
+      .then -> push '/test', refreshRoot
+
+  it 'replace to /test', ->
+    @timeout(3000)
+    expect('.current-path').dom.to.have.text '/'
+      .then -> replace '/test', refreshRoot
+
+  it 'go back to /', ->
+    path = '/test'
+    url = "#{refreshRoot}#{path}"
+
+    expect('.current-path').dom.to.have.text '/'
+      .then -> driver.get url
+      .then -> assertUrl path, url
+      .then -> goback '/', refreshRoot

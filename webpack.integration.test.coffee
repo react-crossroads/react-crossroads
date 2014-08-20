@@ -6,6 +6,7 @@ module.exports =
   entry:
     "hash-location-app": './integration-test/locations/HashLocation/hash-location-app.cjsx'
     "history-location-app": './integration-test/locations/HistoryLocation/history-location-app.cjsx'
+    "refresh-location-app": './integration-test/locations/RefreshLocation/refresh-location-app.cjsx'
   output:
     path: path.join __dirname, 'integration-test'
     filename: '[name].js'
