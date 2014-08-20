@@ -4,7 +4,7 @@
   "description": "Backbone, React-Router, and Flux inspired routing solution",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test-ci"
   },
   "repository": {
     "type": "git",
