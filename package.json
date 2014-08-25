@@ -39,6 +39,7 @@
     "mocha-loader": "https://github.com/bobpace/mocha-loader/tarball/mochaRunCallback",
     "path": "^0.4.9",
     "request": "^2.40.0",
+    "run-sequence": "^0.3.6",
     "selenium-webdriver": "^2.42.1",
     "webpack": "^1.3.3-beta2",
     "webpack-dev-server": "^1.4.10"

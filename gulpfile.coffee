@@ -22,7 +22,11 @@ gulp.task 'test', ->
   gulp.src './test/main.coffee', {read: false}
     .pipe mocha()
 
-gulp.task 'integration-test', ['integration-test-server'], ->
+gulp.task 'integration-test-ci', ->
+  runSequence = require 'run-sequence'
+  runSequence 'integration-test-server', 'integration-test'
+
+gulp.task 'integration-test', ->
   gulp.src './integration-test/integration-test.coffee', {read: false}
     .pipe mocha()
     .pipe exit()
