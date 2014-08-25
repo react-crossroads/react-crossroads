@@ -4,6 +4,11 @@ ExecutionEnvironment = require 'react/lib/ExecutionEnvironment'
 
 _onChange = null
 
+_ensureChangeFires = (func) ->
+  original = HashLocation.getCurrentPath()
+  func()
+  _onChange() if original == HashLocation.getCurrentPath()
+
 # Location handler that uses `window.location.hash`.
 HashLocation =
   setup: (onChange) ->
@@ -30,13 +35,16 @@ HashLocation =
       window.detachEvent 'onhashchange', _onChange
 
   push: (path) ->
-    window.location.hash = path
+    _ensureChangeFires ->
+      window.location.hash = path
 
   replace: (path) ->
-    window.location.replace "#{getWindowPath()}##{path}"
+    _ensureChangeFires ->
+      window.location.replace "#{getWindowPath()}##{path}"
 
   pop: ->
-    window.history.back()
+    _ensureChangeFires ->
+      window.history.back()
 
   getCurrentPath: ->
     window.location.hash.substr 1

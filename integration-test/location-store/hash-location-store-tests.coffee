@@ -41,3 +41,10 @@ describe 'hash location store', ->
       .then -> driver.findElement(webdriver.By.id('goback')).click()
       .then -> driver.findElement(webdriver.By.id('goback')).click()
       .then -> assertUrl '/quick2', "#{hashUrlPrefix}/quick2"
+
+  it 'navigate to current route', ->
+    expect('.current-path').dom.to.have.text '/'
+      .then -> driver.findElement(webdriver.By.id('quick1')).click()
+      .then -> driver.findElement(webdriver.By.id('quick1')).click()
+      .then -> driver.findElement(webdriver.By.id('quick2')).click()
+      .then -> assertUrl '/quick2', "#{hashUrlPrefix}/quick2"
