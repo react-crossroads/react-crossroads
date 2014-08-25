@@ -6,6 +6,13 @@ RoutingDispatcher = require '../dispatcher/RoutingDispatcher'
 BLOCKED=true
 UNBLOCKED=false
 
+_isExpectedEvent = (action, path) ->
+  if action.actionType == RouterConstants.LOCATION_GOBACK
+    # TODO: Figure out something better here, potential for incredibly RARE race condition
+    true
+  else
+    path == action.path
+
 class LocationStore extends EventEmitter
 
   constructor: ->
@@ -35,7 +42,7 @@ class LocationStore extends EventEmitter
         @_become UNBLOCKED
         @_emitChange()
       when RouterConstants.LOCATION_CHANGE, RouterConstants.LOCATION_REPLACE, RouterConstants.LOCATION_GOBACK
-        console.warn "Location store blocked not executing #{JSON.stringify action}"
+        throw new Error "Location store is blocked: #{JSON.stringify action}"
     true
 
   _unblockedHandler: (action) =>
@@ -61,6 +68,8 @@ class LocationStore extends EventEmitter
       when RouterConstants.LOCATION_GOBACK
         @_changeLocation => @_location.pop()
         false
+      when RouterConstants.LOCATION_ATTEMPT
+        throw new Error 'Location store is not blocked!'
 
   _processQueue: =>
     [action, queueTail...] = @_queue
@@ -86,7 +95,7 @@ class LocationStore extends EventEmitter
 
   _locationChangedExpected: (path) =>
     console.log "Location change expected"
-    if !@_isExpectedEvent(@_queue[0], path)
+    if !_isExpectedEvent(@_queue[0], path)
       @_locationChangedDefault(path)
     else
       @_changing = false
@@ -94,13 +103,6 @@ class LocationStore extends EventEmitter
       @_queue.shift()
       @_currentLocationChanged = @_locationChangedDefault
       @_processQueue()
-
-  _isExpectedEvent: (action, path) =>
-    if action.actionType == RouterConstants.LOCATION_GOBACK
-      # TODO: Figure out something better here, potential for incredibly RARE race condition
-      true
-    else
-      path == action.path
 
   _locationChangedDefault: (path) =>
     console.log "Location change unexpected"

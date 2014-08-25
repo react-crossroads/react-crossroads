@@ -42,7 +42,7 @@ describe 'hash location store', ->
       .then -> driver.findElement(webdriver.By.id('goback')).click()
       .then -> assertUrl '/quick2', "#{hashUrlPrefix}/quick2"
 
-  it 'navigate to current route', ->
+  it 'navigate to current route does not prevent follow on navigation', ->
     expect('.current-path').dom.to.have.text '/'
       .then -> driver.findElement(webdriver.By.id('quick1')).click()
       .then -> driver.findElement(webdriver.By.id('quick1')).click()
