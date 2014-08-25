@@ -1,6 +1,7 @@
 RouterConstants = require '../constants/RouterConstants'
 
-_dispatcher = require 'react-dispatcher'
+Dispatcher = require 'react-dispatcher'
+_dispatcher = new Dispatcher
 
 RoutingDispatcher =
   handleRouteAction: (action) ->

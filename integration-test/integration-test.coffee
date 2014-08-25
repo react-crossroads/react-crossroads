@@ -11,9 +11,12 @@ chaiWebdriver = require 'chai-webdriver'
 chai.use chaiWebdriver(driver)
 should = chai.should()
 
-_.extend global, {_, expect, should, webdriver, driver, chai, Key}
+root = 'http://localhost:3002/'
+
+_.extend global, {_, expect, should, webdriver, driver, chai, Key, root}
 
 require './locations/location-tests'
+require './location-store'
 
 after ->
   driver.quit()

@@ -14,7 +14,6 @@ LocationApp = React.createClass
     @props.location.replace(@getDesiredPath())
   handleGoBack: ->
     @props.location.pop()
-  componentDidWillMount: ->
   urlChange: ->
     @setState
       url: @props.location.getCurrentPath()

@@ -25,6 +25,10 @@ exports.startServer = (config, callback) ->
     url = "#{config.webpackServerAddress}/refresh-location-app"
     request(url).pipe(res)
 
+  app.get '/history-location-store-app*', (req, res) ->
+    url = "#{config.webpackServerAddress}/history-location-store-app"
+    request(url).pipe(res)
+
   app.get '*', forwardToWebpackServer
 
   callback(server, app)
