@@ -29,6 +29,15 @@ LocationStoreComponent = React.createClass
       blocked: LocationStore.isBlocked()
   push: (path) ->
     RouterActions.transition path
+  asyncTransitions: ->
+    RouterActions.transition '/asyncTransitions1'
+    RouterActions.transition '/asyncTransitions2'
+    setTimeout ->
+      RouterActions.transition '/asyncTransitions4'
+      RouterActions.transition '/asyncTransitions5'
+    RouterActions.transition '/asyncTransitions3'
+    setTimeout ->
+      RouterActions.transition '/asyncTransitions6'
   render: ->
     <div>
       {@props.children}
@@ -46,6 +55,7 @@ LocationStoreComponent = React.createClass
       <button id='quick4' onClick={=> @push '/quick4'}>Quick 4</button>
       <button id='quick5' onClick={=> @push '/quick5'}>Quick 5</button>
       <br />
+      <button id='asyncTransitions' onClick={@asyncTransitions}>Async Transitions</button>
       <div className='current-path'>{@state.path}</div>
     </div>
 
