@@ -7,6 +7,17 @@ _onChange = null
 _initialPath = null
 _initialPathRgx = null
 
+_isSupported = ->
+  # Taken from Modernizr
+  # https://github.com/Modernizr/Modernizr/blob/master/LICENSE
+  # https://github.com/Modernizr/Modernizr/blob/master/feature-detects/history.js
+  userAgent = navigator.userAgent
+
+  if (userAgent.indexOf('Android 2.') != -1 || userAgent.indexOf('Android 4.0')) && userAgent.indexOf('Mobile Safari') != -1 && userAgent.indexOf('Chrome') == -1
+    return false
+
+  window.history and 'pushState' in window.history
+
 # Location handler that uses HTML5 history.
 HistoryLocation =
 
@@ -50,6 +61,10 @@ HistoryLocation =
     path = path.replace _initialPathRgx, ''
 
     if path == '' then '/' else path
+
+  issupportedorfallback: ->
+    return 'memory' unless executionenvironment.canusedom
+    if _issupported() then true else 'refresh'
 
   toString: ->
     '<HistoryLocation>'

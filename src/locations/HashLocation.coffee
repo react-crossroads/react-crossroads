@@ -1,5 +1,5 @@
-invariant = require 'react/lib/invariant'
-getWindowPath = require './getWindowPath'
+invariant            = require 'react/lib/invariant'
+getWindowPath        = require './getWindowPath'
 ExecutionEnvironment = require 'react/lib/ExecutionEnvironment'
 
 _onChange = null
@@ -48,6 +48,9 @@ HashLocation =
 
   getCurrentPath: ->
     window.location.hash.substr 1
+
+  isSupportedOrFallback: ->
+    if ExecutionEnvironment.canUseDOM then true else 'memory'
 
   toString: ->
     '<HashLocation>'

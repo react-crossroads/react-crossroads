@@ -36,6 +36,9 @@ RefreshLocation =
 
     if path == '' then '/' else path
 
+  isSupportedOrFallback: ->
+    if ExecutionEnvironment.canUseDOM then true else 'memory'
+
   toString: -> '<RefreshLocation>'
 
 module.exports = RefreshLocation

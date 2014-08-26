@@ -1,10 +1,9 @@
 invariant = require('react/lib/invariant')
 
-_onChange
+_onChange = null
 
 # Location handler that does not require a DOM.
-MemoryLocation = {
-
+MemoryLocation =
   setup: (onChange) ->
     _onChange = onChange
 
@@ -30,9 +29,9 @@ MemoryLocation = {
   getCurrentPath: ->
     _currentPath
 
+  isSupportedOrFallback: -> true
+
   toString: ->
     '<MemoryLocation>'
-
-}
 
 module.exports = MemoryLocation

@@ -1,5 +1,6 @@
 RouterConstants = require '../constants/RouterConstants'
 RoutingDispatcher = require '../dispatcher/RoutingDispatcher'
+NamedLocations = require '../locations/NamedLocations'
 
 {EventEmitter} = require 'events'
 
@@ -42,7 +43,7 @@ class LocationStore extends EventEmitter
         @_become UNBLOCKED
         @_emitChange()
       when RouterConstants.LOCATION_CHANGE, RouterConstants.LOCATION_REPLACE, RouterConstants.LOCATION_GOBACK
-        throw new Error "Location store is blocked: #{JSON.stringify action}"
+        console.warn "Location store is blocked: #{JSON.stringify action}"
     true
 
   _unblockedHandler: (action) =>
