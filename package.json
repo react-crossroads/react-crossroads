@@ -2,8 +2,9 @@
   "name": "react-crossroads",
   "version": "0.0.0",
   "description": "Backbone, React-Router, and Flux inspired routing solution",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
+    "prepublish": "gulp build",
     "test": "gulp test-ci"
   },
   "repository": {
@@ -34,6 +35,7 @@
     "gulp-exit": "0.0.2",
     "gulp-mocha": "^1.0.0",
     "gulp-plumber": "^0.6.5",
+    "gulp-rimraf": "^0.1.0",
     "gulp-util": "^3.0.0",
     "html-webpack-plugin": "^1.1.0",
     "lodash": "^2.4.1",
