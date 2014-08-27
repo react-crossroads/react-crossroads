@@ -76,10 +76,8 @@ Router = React.createClass
       currentChain: RouteStore.getCurrentChain()
 
   render: ->
-    <div>
-      Router
-      <this.state.currentChain.render />
-    </div>
+    return null unless @state.currentChain?
+    <this.state.currentChain.render />
 
 
 module.exports = Router

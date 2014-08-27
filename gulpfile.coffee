@@ -10,11 +10,32 @@ webpack = require 'webpack'
 WebpackDevServer = require 'webpack-dev-server'
 
 Ports =
+  examples: 3000
+  examplesWebPack: 3001
   integration: 3002
   integrationWebPack: 3003
 
 addressForPort = (port) ->
   "http://localhost:#{port}"
+
+runServer = (config, contentFolder, startServer, appPort, webPackPort, done) ->
+  webpackServerAddress = addressForPort webPackPort
+
+  webpackServer = new WebpackDevServer webpack(config),
+    contentBase: path.join __dirname, contentFolder
+    stats:
+      colors: true
+    hot: true
+
+  server = startServer
+    server:
+      port: appPort
+    webpackServerAddress: webpackServerAddress
+
+  webpackServer.listen webPackPort, "localhost", (err) ->
+    throw new util.PluginError "WebPack Server Startup", err if err
+    util.log "[WebPack Server Startup]", "#{webpackServerAddress}/webpack-dev-server"
+    done()
 
 gulp.task 'test-ci', ['test'] #, 'integration-test'] # Punting on integration tests on travis for now
 
@@ -32,21 +53,13 @@ gulp.task 'integration-test', ->
     .pipe exit()
 
 gulp.task 'integration-test-server', (done) ->
-  webpackServerAddress = addressForPort Ports.integrationWebPack
   config = require './webpack.integration.test'
+  startServer = require('./integration-test/server').startServer
 
-  webpackServer = new WebpackDevServer webpack(config),
-    contentBase: path.join __dirname, 'integration-test'
-    stats:
-      colors: true
-    hot: true
+  runServer config, 'integration-test', startServer, Ports.integration, Ports.integrationWebPack, done
 
-  server = require('./integration-test/server').startServer
-    server:
-      port: Ports.integration
-    webpackServerAddress: webpackServerAddress
+gulp.task 'examples', (done) ->
+  config = require './webpack.examples'
+  startServer = require('./examples/server').startServer
 
-  webpackServer.listen Ports.integrationWebPack, "localhost", (err) ->
-    throw new util.PluginError "integration-test", err if err
-    util.log "[integration-test-server]", "#{webpackServerAddress}/webpack-dev-server"
-    done()
+  runServer config, 'examples-build', startServer, Ports.examples, Ports.examplesWebPack, done

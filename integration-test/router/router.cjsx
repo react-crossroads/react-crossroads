@@ -4,6 +4,8 @@ Route = require '../../src/components/Route'
 Routes = require '../../src/components/Routes'
 DefaultRoute = require '../../src/components/DefaultRoute'
 
+global.React = React
+
 buildPlaceholder = ->
   Placeholder = React.createClass
     displayName: 'Placeholder'
@@ -35,6 +37,7 @@ React.renderComponent(
         <DefaultRoute name='blahtest' handler={BlahDefaultPlaceholder} handlerProps={name: 'blah default'} />
         <Route name='blahchild' path="{id}/{action}:?other:" handler={BlahActionPlaceholder} handlerProps={name: 'blah id/action'} />
       </Routes>
+      <Routes path='hehe' />
     </Routes>
   </Router>
   , document.body
