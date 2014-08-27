@@ -109,7 +109,6 @@ class LocationStore extends EventEmitter
     console.log "Location change unexpected"
     routerActions = require '../actions/RouterActions'
     routerActions.updateLocation path
-
   setup: (location, initialPath) =>
     console.warn 'Location has already been setup' if @_location?
     @_location = location
