@@ -1,7 +1,7 @@
 {
   "name": "react-crossroads",
   "version": "0.0.0",
-  "description": "Backbone, React-Router, and Flux inspired routing solution",
+  "description": "Client side router for web applications built with React and utilizing the Flux architecture. The backing routing engine is CrossroadsJs.",
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "gulp build",
@@ -12,9 +12,13 @@
     "url": "https://github.com/mtscout6/react-crossroads.git"
   },
   "keywords": [
+    "crossroads",
+    "flux",
     "react",
+    "react-crossroads",
+    "react-dispatcher",
     "router",
-    "flux"
+    "routing"
   ],
   "author": "Matt Smith <mtscout6@gmail.com>",
   "license": "ISC",
@@ -38,19 +42,23 @@
     "gulp-rimraf": "^0.1.0",
     "gulp-util": "^3.0.0",
     "html-webpack-plugin": "^1.1.0",
-    "lodash": "^2.4.1",
     "mocha": "^1.21.4",
     "mocha-loader": "https://github.com/bobpace/mocha-loader/tarball/mochaRunCallback",
     "path": "^0.4.9",
+    "react": "^0.11.1",
+    "react-dispatcher": "^0.2.0",
     "request": "^2.40.0",
     "run-sequence": "^0.3.6",
     "selenium-webdriver": "^2.42.1",
     "webpack": "^1.3.3-beta2",
     "webpack-dev-server": "^1.4.10"
   },
-  "dependencies": {
-    "crossroads": "^0.12.0",
+  "peerDependencies": {
     "react": "^0.11.1",
     "react-dispatcher": "^0.2.0"
+  },
+  "dependencies": {
+    "crossroads": "^0.12.0",
+    "lodash": "^2.4.1"
   }
 }
