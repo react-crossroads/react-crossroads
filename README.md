@@ -1,7 +1,11 @@
-# React Router Flux
+# React Crossroads
 
-Backbone, React-Router, and Flux inspired router for react components.
+Client side router for web applications built with React and utilizing the Flux architecture. The backing routing engine is [CrossroadsJs](http://millermedeiros.github.io/crossroads.js/).
 
 # Running the integration tests
 
-The tests need to be able to find chromedriver on the path. On mac install via homebrew with `brew install chromedriver`
+The tests need to be able to find chromedriver on the path. On mac install via homebrew with `brew install chromedriver` then run:
+
+```bash
+$ gulp integration-test
+```

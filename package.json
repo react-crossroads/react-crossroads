@@ -1,5 +1,5 @@
 {
-  "name": "react-router-flux",
+  "name": "react-crossroads",
   "version": "0.0.0",
   "description": "Backbone, React-Router, and Flux inspired routing solution",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mtscout6/react-router-flux.git"
+    "url": "https://github.com/mtscout6/react-crossroads.git"
   },
   "keywords": [
     "react",
@@ -18,9 +18,9 @@
   "author": "Matt Smith <mtscout6@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mtscout6/react-router-flux/issues"
+    "url": "https://github.com/mtscout6/react-crossroads/issues"
   },
-  "homepage": "https://github.com/mtscout6/react-router-flux",
+  "homepage": "https://github.com/mtscout6/react-crossroads",
   "devDependencies": {
     "chai": "^1.9.1",
     "chai-as-promised": "^4.1.1",
