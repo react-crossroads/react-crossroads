@@ -52,6 +52,8 @@ HashLocation =
   isSupportedOrFallback: ->
     if ExecutionEnvironment.canUseDOM then true else 'memory'
 
+  pathToHref: (path) -> "##{path}"
+
   toString: ->
     '<HashLocation>'
 

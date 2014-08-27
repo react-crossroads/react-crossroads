@@ -66,6 +66,8 @@ HistoryLocation =
     return 'memory' unless executionenvironment.canusedom
     if _issupported() then true else 'refresh'
 
+  pathToHref: (path) -> join initialPath, path
+
   toString: ->
     '<HistoryLocation>'
 

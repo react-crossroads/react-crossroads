@@ -39,6 +39,8 @@ RefreshLocation =
   isSupportedOrFallback: ->
     if ExecutionEnvironment.canUseDOM then true else 'memory'
 
+  pathToHref: (path) -> join initialPath, path
+
   toString: -> '<RefreshLocation>'
 
 module.exports = RefreshLocation

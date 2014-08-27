@@ -12,8 +12,8 @@ _ = require 'lodash'
 class RouteChain
   constructor: (@path, @chain, @route) ->
 
-  makeHref: (props, query) ->
-    throw new Error 'NOT IMPLEMENTED'
+  makePath: (params) ->
+    @route.interpolate params
 
 class ActiveChain
   constructor: (@routeChain, @params) ->
@@ -56,6 +56,15 @@ class RouteStore extends EventEmitter
     null
 
   getCurrentChain: => @_currentChain
+
+  pathTo: (to, params) =>
+    chain = @_routes[to]
+    throw new Error "No route defined for `#{to}`" unless chain?
+    chain.makePath params
+
+  hrefTo: (to, params) =>
+    path = @pathTo to, params
+    LocationStore.pathToHref path
 
   start: =>
     LocationStore.addChangeListener @_locationChanged

@@ -4,8 +4,8 @@ React = require 'react'
 ApplicationRoutes = ->
   <Router location='hash'>
     <Routes handler={require '../shell'}>
-      <Routes path='/' handler={require './address-book'}>
-        <Route path='{entryId}' handler={require './address-entry'} />
+      <Routes name='address-book' path='/' handler={require './address-book'}>
+        <Route name='address-entry' path='{entryId}' handler={require './address-entry'} />
       </Routes>
     </Routes>
   </Router>

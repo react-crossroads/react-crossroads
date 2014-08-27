@@ -31,6 +31,8 @@ MemoryLocation =
 
   isSupportedOrFallback: -> true
 
+  pathToHref: (path) -> path
+
   toString: ->
     '<MemoryLocation>'
 

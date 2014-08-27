@@ -27,6 +27,8 @@ class LocationStore extends EventEmitter
 
   getCurrentPath: => @_location.getCurrentPath()
 
+  pathToHref: (path) => @_location.pathToHref path
+
   handler: (payload) =>
     return unless payload.source == RouterConstants.ROUTER_ACTION
     console.log "Enqueueing: #{JSON.stringify payload}"
