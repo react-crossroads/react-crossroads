@@ -13,10 +13,10 @@ _isSupported = ->
   # https://github.com/Modernizr/Modernizr/blob/master/feature-detects/history.js
   userAgent = navigator.userAgent
 
-  if (userAgent.indexOf('Android 2.') != -1 || userAgent.indexOf('Android 4.0')) && userAgent.indexOf('Mobile Safari') != -1 && userAgent.indexOf('Chrome') == -1
+  if (userAgent.indexOf('Android 2.') != -1 || userAgent.indexOf('Android 4.0') != -1) && userAgent.indexOf('Mobile Safari') != -1 && userAgent.indexOf('Chrome') == -1
     return false
 
-  window.history and 'pushState' in window.history
+  window.history and window.history.pushState?
 
 # Location handler that uses HTML5 history.
 HistoryLocation =
@@ -66,7 +66,7 @@ HistoryLocation =
     return 'memory' unless ExecutionEnvironment.canUseDOM
     if _isSupported() then true else 'refresh'
 
-  pathToHref: (path) -> join initialPath, path
+  pathToHref: (path) -> join _initialPath, path
 
   toString: ->
     '<HistoryLocation>'
