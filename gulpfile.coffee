@@ -41,7 +41,7 @@ runServer = (config, contentFolder, startServer, appPort, webPackPort, done) ->
     done()
 
 gulp.task 'build', ['clean'], ->
-  gulp.src './src/*'
+  gulp.src './src/**/*'
     .pipe plumber()
     .pipe cjsx({ bare: true })
     .pipe gulp.dest('./lib')
