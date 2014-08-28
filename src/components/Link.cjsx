@@ -16,6 +16,7 @@ Link = React.createClass
     if isModifiedEvent(event) or !isLeftClick(event)
       return
 
+    event.preventDefault()
     RouterActions.transition RouteStore.pathTo(@props.to, @props.params)
 
   render: ->
