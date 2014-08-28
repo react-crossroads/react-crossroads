@@ -39,7 +39,7 @@ RefreshLocation =
   isSupportedOrFallback: ->
     if ExecutionEnvironment.canUseDOM then true else 'memory'
 
-  pathToHref: (path) -> join initialPath, path
+  pathToHref: (path) -> join _initialPath, path
 
   toString: -> '<RefreshLocation>'
 
