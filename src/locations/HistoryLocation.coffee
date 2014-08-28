@@ -62,9 +62,9 @@ HistoryLocation =
 
     if path == '' then '/' else path
 
-  issupportedorfallback: ->
-    return 'memory' unless executionenvironment.canusedom
-    if _issupported() then true else 'refresh'
+  isSupportedOrFallback: ->
+    return 'memory' unless ExecutionEnvironment.canUseDOM
+    if _isSupported() then true else 'refresh'
 
   pathToHref: (path) -> join initialPath, path
 
