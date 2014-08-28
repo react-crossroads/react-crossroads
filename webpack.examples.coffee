@@ -10,8 +10,9 @@ module.exports =
     filename: '[name].js'
   module:
     loaders: [
-      {test: /\.cjsx$/, loader: "coffee!cjsx"}
-      {test: /\.coffee$/, loader: "coffee"}
+      { test: /\.cjsx$/, loader: "coffee!cjsx" }
+      { test: /\.coffee$/, loader: "coffee" }
+      { test: /\.css$/, loader: "style-loader!css-loader" }
     ]
   resolve:
     extensions: ['', '.coffee', '.cjsx', '.js']

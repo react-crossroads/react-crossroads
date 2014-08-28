@@ -16,7 +16,7 @@ class RouteChain
     @route.interpolate params
 
 class ActiveChain
-  constructor: (@routeChain, @params) ->
+  constructor: (@path, @routeChain, @params) ->
 
   render: ->
     handler = new ActiveHandler @routeChain.chain, @params
@@ -57,6 +57,11 @@ class RouteStore extends EventEmitter
 
   getCurrentChain: => @_currentChain
 
+  isActive: (to, params) =>
+    return false unless @_currentChain?
+    path = @pathTo to, params
+    path == @_currentChain.path
+
   pathTo: (to, params) =>
     chain = @_routes[to]
     throw new Error "No route defined for `#{to}`" unless chain?
@@ -77,7 +82,7 @@ class RouteStore extends EventEmitter
   _route: (request, data) =>
     params = _.zipObject data.route._paramsIds, data.params
     chain = @_routes[data.route.__name__]
-    @_currentChain = new ActiveChain chain, params
+    @_currentChain = new ActiveChain request, chain, params
     @_emitChange()
 
   _routeNotFound: (request) ->

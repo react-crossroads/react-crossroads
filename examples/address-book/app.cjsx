@@ -1,3 +1,5 @@
+require '../style.css'
+
 React = require 'react'
 Routes = require './routes'
 
