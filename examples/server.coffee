@@ -19,6 +19,10 @@ exports.startServer = (config, callback) ->
 
   app.get '/*.js', forwardToWebpackServer
 
+  app.get '/address-book*', (req, res) ->
+    url = "#{config.webpackServerAddress}/address-book"
+    request(url).pipe(res)
+
   app.get '/', (req, res) ->
     res.sendFile path.join(__dirname, 'index.html')
 
