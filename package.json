@@ -14,6 +14,9 @@
   "keywords": [
     "crossroads",
     "flux",
+    "hash",
+    "history",
+    "navigation",
     "react",
     "react-crossroads",
     "react-dispatcher",
