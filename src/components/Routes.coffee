@@ -33,14 +33,13 @@ _childrenValid = (->
   RouteDefinition.PropTypes.createChainableTypeChecker validate
 )()
 
-
 class Routes extends RouteDefinition
   type: TYPE
 
   constructor: (props, @children) ->
     defaultProps =
       handlerProps: {}
-      # TODO: Primarily hear to participate in validation.... Do something better!
+      # TODO: Primarily here to participate in validation.... Do something better!
       children: @children
 
     @hasDefault = false
