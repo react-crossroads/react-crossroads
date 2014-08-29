@@ -3,6 +3,7 @@ module.exports =
   Routes: require './components/Routes'
   Route: require './components/Route'
   DefaultRoute: require './components/DefaultRoute'
+  NotFoundRoute: require './components/NotFoundRoute'
   Link: require './components/Link'
 
   RouterConstants: require './constants/RouterConstants'

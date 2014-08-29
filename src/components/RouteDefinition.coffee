@@ -21,9 +21,31 @@ createChainableTypeChecker = (validate) ->
 
   chainedCheckType
 
-module.exports = (->
+componentClass = (->
   validate = (props, propName, componentName) ->
     if !React.isValidClass props[propName]
       new Error "Invalid prop #{propName} supplied to #{componentName}, expected a valid React class."
 
   createChainableTypeChecker validate)()
+
+class RouteDefinition
+  constructor: ->
+    @validate()
+
+  validate: ->
+    return unless @propTypes?
+
+    for propName of @propTypes
+      try
+        error = @propTypes[propName](@props, propName, @type)
+      catch err
+        error = err
+
+      console.error error if error?
+      null
+
+RouteDefinition.PropTypes =
+  componentClass: componentClass
+  createChainableTypeChecker: createChainableTypeChecker
+
+module.exports = RouteDefinition

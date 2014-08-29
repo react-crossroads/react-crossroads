@@ -43,6 +43,7 @@ class ActiveHandler
 
 class RouteStore extends EventEmitter
   constructor: ->
+    @setMaxListeners(0) # Don't limit number of listeners
     @dispatchToken = RoutingDispatcher.register(@handler)
     @router = Crossroads.create()
     @router.routed.add @_route

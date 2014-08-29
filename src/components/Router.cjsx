@@ -5,6 +5,8 @@ RouteStore = require '../stores/RouteStore'
 Routes = require './Routes'
 Route = require './Route'
 DefaultRoute = require './DefaultRoute'
+NotFoundRoute = require './NotFoundRoute'
+_ = require 'lodash'
 
 Router = React.createClass
   displayName: 'Router'
@@ -31,24 +33,28 @@ Router = React.createClass
 
     registerChildren: (children, parents, routePrefix) ->
       defaultRegistered = false
+      children = [children] unless _.isArray children
 
-      React.Children.forEach children, (child) ->
+      children.forEach (child) ->
         path = Router.buildPath child, routePrefix
         chain = [parents..., child]
 
-        switch
-          when child instanceof Routes
-            hadDefault = Router.registerChildren child.props.children, chain, path
+        switch child.type
+          when Routes.type
+            hadDefault = Router.registerChildren child.children, chain, path
 
             unless hadDefault
               RouteStore.register path, chain
 
-          when child instanceof DefaultRoute
+          when DefaultRoute.type
             throw new Error 'Cannot register more than one default root per <Routes /> container' if defaultRegistered
             defaultRegistered = true
             RouteStore.register path, chain
 
-          when child instanceof Route
+          when Route.type
+            RouteStore.register path, chain
+
+          when NotFoundRoute.type
             RouteStore.register path, chain
 
       defaultRegistered
