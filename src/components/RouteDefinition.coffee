@@ -10,7 +10,7 @@ createChainableTypeChecker = (validate) ->
   checkType = (isRequired, props, propName, componentName) ->
     componentName = componentName || ANONYMOUS
 
-    if props[propName] == null
+    if !props[propName]?
       if isRequired
         new Error "Required prop `#{propName}` was not specified in `#{componentName}`."
     else
@@ -28,6 +28,25 @@ componentClass = (->
 
   createChainableTypeChecker validate)()
 
+buildPath = (route, prefix) ->
+  path = route.props.path
+  name = route.props.name unless route.type == 'DefaultRoute'
+  join = (prefix, suffix) ->
+    if prefix[prefix.length-1] == '/'
+      "#{prefix}#{suffix}"
+    else
+      "#{prefix}/#{suffix}"
+
+  if path?
+    if path[0] == '/'
+      path
+    else
+      join prefix, path
+  else if name?
+    join prefix, name
+  else
+    prefix
+
 class RouteDefinition
   constructor: ->
     @validate()
@@ -43,6 +62,15 @@ class RouteDefinition
 
       console.error error if error?
       null
+
+  registrationParts: (parents, routePrefix) ->
+    path: buildPath(@, routePrefix)
+    chain: [parents..., @]
+
+  # Default route registration logic
+  register: (parents, routePrefix, routeStore) ->
+    {path, chain} = @registrationParts(parents, routePrefix)
+    routeStore.register path, chain
 
 RouteDefinition.PropTypes =
   componentClass: componentClass

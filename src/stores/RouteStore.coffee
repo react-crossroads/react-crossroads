@@ -39,7 +39,11 @@ class ActiveHandler
     props = merge @handler.props.handlerProps, addedProps
     props.params = @params
     props.activeRouteHandler = childFunc
-    @handler.props.handler(props)
+
+    if @handler.props.handler?
+      @handler.props.handler(props)
+    else # This case should only occur when the <Routes /> container does not have a handler
+      props.activeRouteHandler(addedProps)
 
 class RouteStore extends EventEmitter
   constructor: ->

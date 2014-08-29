@@ -43,6 +43,12 @@ class Routes extends RouteDefinition
       # TODO: Primarily hear to participate in validation.... Do something better!
       children: @children
 
+    @hasDefault = false
+
+    for child in @children when child.type is 'DefaultRoute'
+      throw new Error 'Only one <DefaultRoute /> allows per <Routes /> container' if @hasDefault
+      @hasDefault = true
+
     @props = merge defaultProps, props
     super()
 
@@ -52,6 +58,14 @@ class Routes extends RouteDefinition
     name: React.PropTypes.string
     handlerProps: React.PropTypes.object
     children: _childrenValid.isRequired
+
+  register: (parents, routePrefix, routeStore) ->
+    {path, chain} = @registrationParts(parents, routePrefix)
+
+    for child in @children
+      child.register chain, path, routeStore
+
+    routeStore.register path, chain unless @hasDefault
 
 factory = (props, children...) -> new Routes props, children
 factory.type = 'Routes'
