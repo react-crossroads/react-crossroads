@@ -1,4 +1,4 @@
-# React Crossroads
+# React Crossroads (still in alpha stage of development)
 
 Client side router for web applications built with React and utilizing the Flux architecture. The backing routing engine is [CrossroadsJs](http://millermedeiros.github.io/crossroads.js/).
 
