@@ -1,7 +1,7 @@
-DefaultRoute = require '../../src/components/DefaultRoute'
+NotFoundRoute = require '../../src/components/NotFoundRoute'
 React = require 'react'
 
-describe 'Default Route', ->
+describe 'Not Found Route', ->
   Handler = React.createClass
     render: -> <div className='test-handler'></div>
 
@@ -11,44 +11,50 @@ describe 'Default Route', ->
   afterEach ->
     console.error.restore() if console.error.restore
 
-  it 'factory type is DefaultRoute', ->
-    DefaultRoute.type.should.equal 'DefaultRoute'
+  it 'factory type is NotFoundRoute', ->
+    NotFoundRoute.type.should.equal 'NotFoundRoute'
 
-  it 'Creates route definition with DefaultRoute type', ->
-    route = DefaultRoute handler: Handler
-    route.type.should.equal 'DefaultRoute'
+  it 'Creates route definition with NotFoundRoute type', ->
+    route = NotFoundRoute handler: Handler
+    route.type.should.equal 'NotFoundRoute'
     console.error.should.not.have.been.called
 
   it 'handler prop is required', ->
-    route = DefaultRoute()
+    route = NotFoundRoute()
     console.error.calledOnce.should.equal true
     console.error.firstCall.args[0].message.should.contain 'Required prop `handler` was not specified'
 
   it 'handler prop must be a component class', ->
-    route = DefaultRoute handler: 5
+    route = NotFoundRoute handler: 5
     console.error.calledOnce.should.equal true
     console.error.firstCall.args[0].message.should.contain 'expected a valid React class'
 
-  it 'name prop must be a string', ->
-    route = DefaultRoute
+  it 'default path prop is wildcard', ->
+    route = NotFoundRoute
       handler: Handler
-      name: 'some-random-name'
+
+    route.props.path.should.equal ':path*:'
+
+  it 'path prop must be a string', ->
+    route = NotFoundRoute
+      handler: Handler
+      path: 'some-random-path'
     console.error.calledOnce.should.equal false
 
-    route = DefaultRoute
+    route = NotFoundRoute
       handler: Handler
-      name: 5
+      path: 5
     console.error.calledOnce.should.equal true
     console.error.firstCall.args[0].message.should.contain 'expected `string`'
 
   it 'does not support children', ->
     expect ->
-      route = DefaultRoute
+      route = NotFoundRoute
         handler: Handler
         , <Handler />
     .to.throw /does not support children/
 
-  expectedRegister = (route) ->
+  expectedRegister = (route, expPath) ->
     store =
       register: sinon.spy()
     parents = [
@@ -60,12 +66,17 @@ describe 'Default Route', ->
 
     route.register parents, path, store
 
-    store.register.should.have.been.calledWith path, [parents..., route]
+    store.register.should.have.been.calledWith expPath, [parents..., route]
 
   it 'registers with parent route prefix', ->
-    expectedRegister DefaultRoute(handler: Handler)
+    path = '/home/layer-one/:path*:'
+    route = NotFoundRoute handler: Handler
+    expectedRegister route, path
 
-  it 'registers with parent route prefix ignores path', ->
-    expectedRegister DefaultRoute(handler: Handler, path: '/should/ignore')
+  it 'registers with parent route prefix absolute path', ->
+    path = '/:path*:'
+    route = NotFoundRoute
+      handler: Handler
+      path: '/'
 
-
+    expectedRegister route, path

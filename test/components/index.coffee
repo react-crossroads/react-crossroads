@@ -1,1 +1,2 @@
 require './DefaultRoute'
+require './NotFoundRoute'

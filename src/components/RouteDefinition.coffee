@@ -1,4 +1,5 @@
 React = require 'react'
+join = require('path').join
 
 ANONYMOUS = '<<anonymous>>'
 
@@ -31,11 +32,6 @@ componentClass = do ->
 buildPath = (route, prefix) ->
   path = route.props.path
   name = route.props.name
-  join = (prefix, suffix) ->
-    if prefix[prefix.length-1] == '/'
-      "#{prefix}#{suffix}"
-    else
-      "#{prefix}/#{suffix}"
 
   if path?
     if path[0] == '/'
