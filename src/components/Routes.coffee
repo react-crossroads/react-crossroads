@@ -16,7 +16,7 @@ _childrenValid = (->
   validate = (props, propName, componentName) ->
     validChild = (child) ->
       unless child.type in VALID_TYPES
-        return new Error "All children must be the proper type [Proper types: #{JSON.stringify VALID_TYPES}]"
+        return new Error "All children must be a proper type [Proper types: #{JSON.stringify VALID_TYPES}]"
 
     if _.isArray props[propName]
       return new Error 'Must provide at least one child' if props[propName].length == 0
@@ -32,7 +32,7 @@ _childrenValid = (->
         err = validChild child
         return err if err?
 
-      return new Error 'Only one <DefaultRoute /> is allowed per <Routes /> containter' if defaultCount > 1
+      return new Error 'Only one <DefaultRoute /> is allowed per <Routes /> container' if defaultCount > 1
     else
       err = validChild props[propName]
       return err if err?
@@ -49,11 +49,7 @@ class Routes extends RouteDefinition
       # TODO: Primarily here to participate in validation.... Do something better!
       children: @children
 
-    @hasDefault = false
-
-    for child in @children when child.type is 'DefaultRoute'
-      throw new Error 'Only one <DefaultRoute /> allows per <Routes /> container' if @hasDefault
-      @hasDefault = true
+    @hasDefault = _.any @children, (child) -> child.type is 'DefaultRoute'
 
     @props = merge defaultProps, props
     super()
