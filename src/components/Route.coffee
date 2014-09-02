@@ -5,7 +5,7 @@ merge = require 'react/lib/merge'
 TYPE = 'Route'
 
 _atLeastOneUnlessDefault = (props, propName) ->
-  return new Error 'Must provide either a name, a path or both' unless props.name or props.path
+  return new Error 'Must provide either a name, a path or both' unless props.name? or props.path?
   React.PropTypes.string.apply(null, arguments)
 
 class Route extends RouteDefinition
