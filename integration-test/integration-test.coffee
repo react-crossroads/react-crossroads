@@ -15,8 +15,11 @@ root = 'http://localhost:3002/'
 
 _.extend global, {_, expect, should, webdriver, driver, chai, Key, root}
 
-require './locations/location-tests'
-require './location-store'
+describe 'integration tests', ->
+  @timeout 4000
+
+  require './locations/location-tests'
+  require './location-store'
 
 after ->
   driver.quit()

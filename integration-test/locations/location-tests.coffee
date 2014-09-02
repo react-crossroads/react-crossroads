@@ -17,7 +17,6 @@ describe 'hash location', ->
       .then -> push '/test', hashUrlPrefix
 
   it 'replace to /test', ->
-    @timeout(3000)
     expect('.current-path').dom.to.have.text '/'
       .then -> replace '/test', hashUrlPrefix
 
@@ -47,7 +46,6 @@ describe 'history location', ->
       .then -> push '/test', historyRoot
 
   it 'replace to /test', ->
-    @timeout(3000)
     expect('.current-path').dom.to.have.text '/'
       .then -> replace '/test', historyRoot
 
@@ -77,7 +75,6 @@ describe 'refresh location', ->
       .then -> push '/test', refreshRoot
 
   it 'replace to /test', ->
-    @timeout(3000)
     expect('.current-path').dom.to.have.text '/'
       .then -> replace '/test', refreshRoot
 

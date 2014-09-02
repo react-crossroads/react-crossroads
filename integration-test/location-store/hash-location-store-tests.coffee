@@ -17,7 +17,6 @@ describe 'hash location store', ->
       .then -> push '/test', hashUrlPrefix
 
   it 'replace to /test', ->
-    @timeout 3000
     expect('.current-path').dom.to.have.text '/'
       .then -> replace '/test', hashUrlPrefix
 
@@ -50,7 +49,6 @@ describe 'hash location store', ->
       .then -> assertUrl '/quick2', "#{hashUrlPrefix}/quick2"
 
   it 'queues up async location changes', ->
-    @timeout 3000
     assertAsyncUrl = (index) ->
       return if index == 0
 
