@@ -18,6 +18,10 @@ class DefaultRoute extends RouteDefinition
     handler: RouteDefinition.PropTypes.componentClass.isRequired
     name: React.PropTypes.string
 
+  register: (parents, routePrefix, routeStore) ->
+    chain = [parents..., @]
+    routeStore.register routePrefix, chain
+
 factory = (props) ->
   throw new Error 'DefaultRoute does not support children use <Routes /> instead' if arguments.length > 1
   new DefaultRoute props

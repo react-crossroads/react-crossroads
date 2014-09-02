@@ -30,7 +30,7 @@ componentClass = do ->
 
 buildPath = (route, prefix) ->
   path = route.props.path
-  name = route.props.name unless route.type == 'DefaultRoute'
+  name = route.props.name
   join = (prefix, suffix) ->
     if prefix[prefix.length-1] == '/'
       "#{prefix}#{suffix}"
@@ -67,7 +67,7 @@ class RouteDefinition
     path: buildPath(@, routePrefix)
     chain: [parents..., @]
 
-  # Default route registration logic
+  # Default registration logic
   register: (parents, routePrefix, routeStore) ->
     {path, chain} = @registrationParts(parents, routePrefix)
     routeStore.register path, chain

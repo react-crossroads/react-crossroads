@@ -54,6 +54,7 @@ gulp.task 'clean', ->
 gulp.task 'test-ci', ['test'] #, 'integration-test'] # TODO: Punting on integration tests on travis for now
 
 gulp.task 'test', ->
+  require 'coffee-react/register'
   gulp.src './test/main.coffee', {read: false}
     .pipe mocha()
 
@@ -64,7 +65,6 @@ gulp.task 'integration-test-ci', ->
 gulp.task 'integration-test', ->
   gulp.src './integration-test/integration-test.coffee', {read: false}
     .pipe mocha()
-    .pipe exit()
 
 gulp.task 'integration-test-server', (done) ->
   config = require './webpack.integration.test'
@@ -77,3 +77,10 @@ gulp.task 'examples', (done) ->
   startServer = require('./examples/server').startServer
 
   runServer config, 'examples-build', startServer, Ports.examples, Ports.examplesWebPack, done
+
+gulp.task 'test-watch', ->
+  gulp.watch ['src/**', 'test/**'], ['test']
+
+gulp.task 'integration-test-watch', ['integration-test-server'], ->
+  gulp.watch ['src/**', 'integration-test/**'], ['integration-test']
+
