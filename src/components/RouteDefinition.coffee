@@ -25,7 +25,7 @@ createChainableTypeChecker = (validate) ->
 componentClass = do ->
   validate = (props, propName, componentName) ->
     if !React.isValidClass props[propName]
-      new Error "Invalid prop #{propName} supplied to #{componentName}, expected a valid React class."
+      new Error "Invalid prop `#{propName}` supplied to #{componentName}, expected a valid React class."
 
   createChainableTypeChecker validate
 

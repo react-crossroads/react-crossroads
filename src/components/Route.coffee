@@ -16,15 +16,16 @@ class Route extends RouteDefinition
       handlerProps: {}
 
     @props = merge defaultProps, props
+    super()
 
   propTypes:
     handler: RouteDefinition.PropTypes.componentClass.isRequired
     path: _atLeastOneUnlessDefault
     name: _atLeastOneUnlessDefault
-    handlerProps: React.PropTypes.object
+    handlerProps: React.PropTypes.object.isRequired
 
 factory = (props) ->
-  throw new Error 'Route does not support children use <Routes /> instead' if arguments.length > 1
+  throw new Error 'Route does not support children, use <Routes /> instead' if arguments.length > 1
   new Route props
 
 factory.type = TYPE

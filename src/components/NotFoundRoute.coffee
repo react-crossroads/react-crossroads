@@ -31,6 +31,7 @@ class NotFoundRoute extends RouteDefinition
   propTypes:
     handler: RouteDefinition.PropTypes.componentClass.isRequired
     path: React.PropTypes.string.isRequired
+    handlerProps: React.PropTypes.object.isRequired
 
 factory = (props) ->
   throw new Error 'NotFoundRoute does not support children' if arguments.length > 1

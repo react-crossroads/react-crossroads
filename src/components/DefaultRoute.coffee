@@ -9,7 +9,7 @@ class DefaultRoute extends RouteDefinition
 
   constructor: (props) ->
     defaultProps =
-      handlerProps = {}
+      handlerProps: {}
 
     @props = merge defaultProps, props
     super()
@@ -17,13 +17,14 @@ class DefaultRoute extends RouteDefinition
   propTypes:
     handler: RouteDefinition.PropTypes.componentClass.isRequired
     name: React.PropTypes.string
+    handlerProps: React.PropTypes.object.isRequired
 
   register: (parents, routePrefix, routeStore) ->
     chain = [parents..., @]
     routeStore.register routePrefix, chain
 
 factory = (props) ->
-  throw new Error 'DefaultRoute does not support children use <Routes /> instead' if arguments.length > 1
+  throw new Error 'DefaultRoute does not support children, use <Routes /> instead' if arguments.length > 1
   new DefaultRoute props
 
 factory.type = TYPE

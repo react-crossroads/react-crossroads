@@ -20,12 +20,19 @@ _childrenValid = (->
 
     if _.isArray props[propName]
       return new Error 'Must provide at least one child' if props[propName].length == 0
+      defaultCount = 0
+
       for child in props[propName]
         unless child?
           return new Error 'All child elements must be defined'
 
+        if child.type == 'DefaultRoute'
+          defaultCount += 1
+
         err = validChild child
         return err if err?
+
+      return new Error 'Only one <DefaultRoute /> is allowed per <Routes /> containter' if defaultCount > 1
     else
       err = validChild props[propName]
       return err if err?
@@ -55,7 +62,7 @@ class Routes extends RouteDefinition
     handler: RouteDefinition.PropTypes.componentClass
     path: React.PropTypes.string
     name: React.PropTypes.string
-    handlerProps: React.PropTypes.object
+    handlerProps: React.PropTypes.object.isRequired
     children: _childrenValid.isRequired
 
   register: (parents, routePrefix, routeStore) ->

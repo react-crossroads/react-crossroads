@@ -27,7 +27,18 @@ describe 'Not Found Route', ->
   it 'handler prop must be a component class', ->
     route = NotFoundRoute handler: 5
     console.error.calledOnce.should.equal true
+    console.error.firstCall.args[0].message.should.contain '`handler`'
     console.error.firstCall.args[0].message.should.contain 'expected a valid React class'
+
+  it 'handlerProps prop defaults to empty object', ->
+    route = NotFoundRoute handler: Handler
+    route.props.handlerProps.should.be.empty
+
+  it 'handlerProps prop must be an object', ->
+    route = NotFoundRoute handler: Handler, handlerProps: 5
+    console.error.calledOnce.should.equal true
+    console.error.firstCall.args[0].message.should.contain '`handlerProps`'
+    console.error.firstCall.args[0].message.should.contain 'expected `object`'
 
   it 'default path prop is wildcard', ->
     route = NotFoundRoute
