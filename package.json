@@ -53,6 +53,7 @@
     "path": "^0.4.9",
     "react": "^0.11.1",
     "request": "^2.40.0",
+    "rewire": "^2.1.0",
     "run-sequence": "^0.3.6",
     "selenium-webdriver": "^2.42.1",
     "sinon": "^1.10.3",

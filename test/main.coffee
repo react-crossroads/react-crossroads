@@ -13,3 +13,4 @@ _.extend global, {_, expect, should, sinon}
 require './components'
 require './dispatcher/RoutingDispatcher'
 require './locations/NamedLocations'
+require './mixins'
