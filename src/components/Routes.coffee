@@ -5,7 +5,7 @@ _ = require 'lodash'
 
 TYPE = 'Routes'
 
-_childrenValid = (->
+_childrenValid = do ->
   VALID_TYPES = [
     'Route'
     'Routes'
@@ -38,7 +38,8 @@ _childrenValid = (->
       return err if err?
 
   RouteDefinition.PropTypes.createChainableTypeChecker validate
-)()
+
+_hasDefault = (children) -> _.any children, (child) -> child.type is 'DefaultRoute'
 
 class Routes extends RouteDefinition
   type: TYPE
@@ -49,9 +50,10 @@ class Routes extends RouteDefinition
       # TODO: Primarily here to participate in validation.... Do something better!
       children: @children
 
-    @hasDefault = _.any @children, (child) -> child.type is 'DefaultRoute'
-
     @props = merge defaultProps, props
+    @_hasDefault = _hasDefault(@children)
+    @_hasPath = @props.path? || @props.name?
+
     super()
 
   propTypes:
@@ -67,7 +69,11 @@ class Routes extends RouteDefinition
     for child in @children
       child.register chain, path, routeStore
 
-    routeStore.register path, chain unless @hasDefault
+    shouldRegister = !@_hasDefault
+    shouldRegister = shouldRegister and @_hasPath
+    shouldRegister = shouldRegister and @props.handler?
+
+    routeStore.register path, chain if shouldRegister
 
 factory = (props, children...) -> new Routes props, _.flatten(children)
 factory.type = 'Routes'

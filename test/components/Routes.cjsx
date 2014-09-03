@@ -185,4 +185,41 @@ describe 'Routes', ->
     routes = Routes(null, children)
     console.error.called.should.equal false
 
+  containerDoesNotRegister = (routes, expPath) ->
+    store =
+      register: sinon.spy()
+    parents = []
+    path = '/'
 
+    routes.register parents, path, store
+
+    store.register.callCount.should.equal 1
+    store.register.should.have.been.calledWith expPath, [routes, routes.children[0]]
+
+  it 'does not register container when container does not have a name or path', ->
+    routes =
+      <Routes handler={Handler}>
+        <Route name='test' handler={Handler} />
+      </Routes>
+    containerDoesNotRegister routes, '/test'
+
+  it 'does not register container when container does not have a handler or path', ->
+    routes =
+      <Routes name='container'>
+        <Route name='test' handler={Handler} />
+      </Routes>
+    containerDoesNotRegister routes, '/container/test'
+
+  it 'does not register container when container does not have a handler or name', ->
+    routes =
+      <Routes path='container'>
+        <Route name='test' handler={Handler} />
+      </Routes>
+    containerDoesNotRegister routes, '/container/test'
+
+  it 'does not register container when container does not have a handler, name, or path', ->
+    routes =
+      <Routes>
+        <Route name='test' handler={Handler} />
+      </Routes>
+    containerDoesNotRegister routes, '/test'
