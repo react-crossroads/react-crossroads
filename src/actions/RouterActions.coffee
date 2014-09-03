@@ -31,13 +31,15 @@ class RouterActions
     @_dispatch
       actionType: RouterConstants.LOCATION_GOBACK
 
-  block: ->
+  block: (id) ->
     @dispatcher.handleRouteAction
       actionType: RouterConstants.LOCATION_BLOCK
+      blockId: id
 
-  unblock: ->
+  unblock: (id) ->
     @dispatcher.handleRouteAction
       actionType: RouterConstants.LOCATION_UNBLOCK
+      blockId: id
 
   updateLocation: (path) ->
     console.log "RouterActions.updateLocation(#{path})"
