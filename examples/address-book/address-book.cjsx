@@ -17,7 +17,7 @@ AddressBook = React.createClass
       <ul>
         {entries}
       </ul>
-      <this.props.activeRouteHandler />
+      <@props.activeRouteHandler />
     </div>
 
 module.exports = AddressBook

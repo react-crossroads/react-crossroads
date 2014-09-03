@@ -19,7 +19,7 @@ buildPlaceholder = ->
       <div>
         Placeholder {@props.name} Params: {JSON.stringify @props.params}
         <div style={'margin-left': 10}>
-          <this.props.activeRouteHandler />
+          <@props.activeRouteHandler />
         </div>
       </div>
 
