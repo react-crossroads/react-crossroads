@@ -32,6 +32,6 @@ Router = React.createClass
 
   render: ->
     return null unless @state.currentChain?
-    <this.state.currentChain.render />
+    <@state.currentChain.render />
 
 module.exports = Router
