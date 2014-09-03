@@ -1,7 +1,7 @@
 RouterConstants = require '../constants/RouterConstants'
 
-Dispatcher = require 'react-dispatcher'
-_dispatcher = new Dispatcher
+Dispatcher = require('flux').Dispatcher
+_dispatcher = new Dispatcher()
 
 RoutingDispatcher =
   handleRouteAction: (action) ->
