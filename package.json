@@ -39,6 +39,7 @@
     "coffee-script": "^1.7.1",
     "css-loader": "^0.7.1",
     "express": "^4.8.5",
+    "flux": "^2.0.0",
     "gulp": "^3.8.7",
     "gulp-cjsx": "^0.3.0",
     "gulp-exit": "0.0.2",
@@ -51,7 +52,6 @@
     "mocha-loader": "https://github.com/bobpace/mocha-loader/tarball/mochaRunCallback",
     "path": "^0.4.9",
     "react": "^0.11.1",
-    "react-dispatcher": "^0.2.0",
     "request": "^2.40.0",
     "run-sequence": "^0.3.6",
     "selenium-webdriver": "^2.42.1",
@@ -62,8 +62,8 @@
     "webpack-dev-server": "^1.4.10"
   },
   "peerDependencies": {
-    "react": "^0.11.1",
-    "react-dispatcher": "^0.2.0"
+    "flux": "^2.0.0",
+    "react": "^0.11.1"
   },
   "dependencies": {
     "crossroads": "^0.12.0",
