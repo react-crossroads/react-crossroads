@@ -177,4 +177,12 @@ describe 'Routes', ->
       </Routes>
     expectedRegister routes, routes.props.path
 
+  it 'children can be provided as an array', ->
+    children = [
+      Route(name: 'test', handler: Handler)
+      Route(name: 'test2', handler: Handler)
+    ]
+    routes = Routes(null, children)
+    console.error.called.should.equal false
+
 

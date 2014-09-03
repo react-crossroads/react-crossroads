@@ -69,7 +69,7 @@ class Routes extends RouteDefinition
 
     routeStore.register path, chain unless @hasDefault
 
-factory = (props, children...) -> new Routes props, children
+factory = (props, children...) -> new Routes props, _.flatten(children)
 factory.type = 'Routes'
 
 module.exports = factory
