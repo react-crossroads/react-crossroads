@@ -13,12 +13,12 @@ Router = React.createClass
     initialPath: ''
 
   getInitialState: ->
-    <Routes>{@props.children}</Routes>.register [], '', RouteStore
+    Routes(null, @props.children).register [], '', RouteStore
     routesRegistered: true
 
   propTypes:
-    location: React.PropTypes.string
-    initialPath: React.PropTypes.string
+    location: React.PropTypes.string.isRequired
+    initialPath: React.PropTypes.string.isRequired
 
   componentWillMount: ->
     location = NamedLocations.locationFor @props.location
