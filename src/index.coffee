@@ -10,7 +10,8 @@ module.exports =
 
   RouterContext: require './context/RouterContext'
 
-  RoutingDispatcher: require './dispatcher/RoutingDispatcher'
+  ActiveState: require './mixins/ActiveState'
+  RouteTo: require './mixins/RouteTo'
 
   LocationStore: require './stores/LocationStore'
   RouteStore: require './stores/RouteStore'
