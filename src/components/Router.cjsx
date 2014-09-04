@@ -20,7 +20,7 @@ Router = React.createClass
   getInitialState: ->
     # TODO: pull dispatcher from props first?
     routerContext = new RouterContext( new Dispatcher() )
-    Routes(null, @props.children).register [], '', routerContext.stores.route
+    <Routes path='/'>{@props.children}</Routes>.register [], '', routerContext.stores.route
 
     routesRegistered: true
     routerContext: routerContext
