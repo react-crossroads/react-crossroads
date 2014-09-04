@@ -2,26 +2,33 @@ RouterConstants = require '../../src/constants/RouterConstants'
 RoutingDispatcher = require '../../src/dispatcher/RoutingDispatcher'
 
 describe 'the routing dispatcher', ->
-  dispatchedEvents = null
-  _currentDispatcher = null
+  dispatcher = null
+  routingDispatcher = null
 
   beforeEach ->
-    dispatchedEvents = []
-    _currentDispatcher = RoutingDispatcher.getDispatcher()
-    RoutingDispatcher.initialize
-      dispatch: (action) ->
-        dispatchedEvents.push action
+    dispatcher =
+      dispatch: sinon.spy()
 
-  afterEach ->
-    RoutingDispatcher.initialize _currentDispatcher
+    routingDispatcher = new RoutingDispatcher dispatcher
+
+    #dispatchedEvents = []
+    #_currentDispatcher = RoutingDispatcher.getDispatcher()
+    #RoutingDispatcher.initialize
+      #dispatch: (action) ->
+        #dispatchedEvents.push action
 
   it 'dispatches one action per handleRouteAction call', ->
-    RoutingDispatcher.handleRouteAction()
-    dispatchedEvents.length.should.equal 1
+    routingDispatcher.handleRouteAction()
+    dispatcher.dispatch.should.have.been.calledOnce
 
   it 'wraps the payload and applies a source property', ->
-    payload =
-      blah: true
-    RoutingDispatcher.handleRouteAction payload
-    dispatchedEvents[0].source.should.equal RouterConstants.ROUTER_ACTION
-    dispatchedEvents[0].action.should.equal payload
+    action =
+      actionType: 'test action'
+      payload: 5
+
+    routingDispatcher.handleRouteAction action
+
+    dispatcher.dispatch.should.have.been.calledOnce
+    dispatcher.dispatch.should.have.been.calledWith
+      source: RouterConstants.ROUTER_ACTION
+      action: action

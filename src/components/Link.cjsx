@@ -25,7 +25,7 @@ Link = React.createClass
 
   updateActiveState: ->
     @setState
-      isActive: Link.isActive @props.to, @props.params
+      isActive: @isActive @props.to, @props.params
 
   render: ->
     classes = {}

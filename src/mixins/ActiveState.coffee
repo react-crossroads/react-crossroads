@@ -1,17 +1,21 @@
+React = require 'react'
 RouteStore = require '../stores/RouteStore'
 
 ActiveState =
-  statics:
-    isActive: RouteStore.isActive
+  contextTypes:
+    router: React.PropTypes.object.isRequired
 
   componentWillMount: ->
-    RouteStore.addChangeListener @handleActiveStateChange
+    @context.router.stores.route.addChangeListener @handleActiveStateChange
 
   componentDidMount: ->
     @updateActiveState() if @updateActiveState?
 
   componentWillUnmount: ->
-    RouteStore.removeChangeListener @handleActiveStateChange
+    @context.router.stores.route.removeChangeListener @handleActiveStateChange
+
+  isActive: (to, params) ->
+    @context.router.stores.route.isActive(to, params)
 
   handleActiveStateChange: ->
     if @isMounted() and @updateActiveState?

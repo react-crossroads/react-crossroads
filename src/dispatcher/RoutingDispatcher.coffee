@@ -1,18 +1,14 @@
 RouterConstants = require '../constants/RouterConstants'
 
-Dispatcher = require('flux').Dispatcher
-_dispatcher = new Dispatcher()
+class RoutingDispatcher
+  constructor: (@dispatcher) ->
 
-RoutingDispatcher =
   handleRouteAction: (action) ->
-    _dispatcher.dispatch
+    @dispatcher.dispatch
       source: RouterConstants.ROUTER_ACTION,
       action: action
-  initialize: (dispatcher) ->
-    _dispatcher = dispatcher
+
   register: (handler) ->
-    _dispatcher.register handler
-  getDispatcher: ->
-    _dispatcher
+    @dispatcher.register handler
 
 module.exports = RoutingDispatcher

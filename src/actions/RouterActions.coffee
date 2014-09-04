@@ -1,20 +1,20 @@
-RoutingDispatcher = require '../dispatcher/RoutingDispatcher'
-LocationStore = require '../stores/LocationStore'
 RouterConstants = require '../constants/RouterConstants'
 
-_dispatch = (action) ->
-  if LocationStore.isBlocked()
-    action =
-      actionType: RouterConstants.LOCATION_ATTEMPT
-      originalAction: action
+class RouterActions
+  constructor: (@dispatcher, @locationStore) ->
 
-  RoutingDispatcher.handleRouteAction action
+  _dispatch: (action) ->
+    if @locationStore.isBlocked()
+      action =
+        actionType: RouterConstants.LOCATION_ATTEMPT
+        originalAction: action
 
-RouterActions =
+    @dispatcher.handleRouteAction action
+
   # TODO: Build path with to, params, query
   transition: (path) ->
     console.log "RouterActions.transition(#{path})"
-    _dispatch
+    @_dispatch
       actionType: RouterConstants.LOCATION_CHANGE
       path: path
       fromLocationEvent: false
@@ -22,26 +22,26 @@ RouterActions =
   # TODO: Build path with to, params, query
   replace: (path) ->
     console.log "RouterActions.replace(#{path})"
-    _dispatch
+    @_dispatch
       actionType: RouterConstants.LOCATION_REPLACE
       path: path
 
   back: ->
     console.log "RouterActions.back()"
-    _dispatch
+    @_dispatch
       actionType: RouterConstants.LOCATION_GOBACK
 
   block: ->
-    RoutingDispatcher.handleRouteAction
+    @dispatcher.handleRouteAction
       actionType: RouterConstants.LOCATION_BLOCK
 
   unblock: ->
-    RoutingDispatcher.handleRouteAction
+    @dispatcher.handleRouteAction
       actionType: RouterConstants.LOCATION_UNBLOCK
 
   updateLocation: (path) ->
     console.log "RouterActions.updateLocation(#{path})"
-    _dispatch
+    @_dispatch
       actionType: RouterConstants.LOCATION_CHANGE
       path: path
       fromLocationEvent: true

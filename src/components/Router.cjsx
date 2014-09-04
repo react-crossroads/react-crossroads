@@ -1,9 +1,9 @@
 React = require 'react'
 NamedLocations = require '../locations/NamedLocations'
-LocationStore = require '../stores/LocationStore'
-RouteStore = require '../stores/RouteStore'
 Routes = require './Routes'
 NotFoundRoute = require './NotFoundRoute'
+RouterContext = require '../context/RouterContext'
+{Dispatcher} = require 'flux'
 
 Router = React.createClass
   displayName: 'Router'
@@ -12,9 +12,19 @@ Router = React.createClass
     location: 'hash'
     initialPath: ''
 
+  childContextTypes:
+    router: React.PropTypes.object.isRequired
+
+  getChildContext: ->
+    router: @state.routerContext
+
   getInitialState: ->
-    Routes(null, @props.children).register [], '', RouteStore
+    # TODO: pull dispatcher from props first?
+    routerContext = new RouterContext( new Dispatcher() )
+    Routes(null, @props.children).register [], '', routerContext.stores.route
+
     routesRegistered: true
+    routerContext: routerContext
 
   propTypes:
     location: React.PropTypes.string.isRequired
@@ -22,13 +32,14 @@ Router = React.createClass
 
   componentWillMount: ->
     location = NamedLocations.locationFor @props.location
-    LocationStore.setup location, @props.initialPath
-    RouteStore.addChangeListener @routeChanged
-    RouteStore.start()
+    @state.routerContext.stores.location.setup location, @props.initialPath
+
+    @state.routerContext.stores.route.addChangeListener @routeChanged
+    @state.routerContext.stores.route.start()
 
   routeChanged: ->
     @setState
-      currentChain: RouteStore.getCurrentChain()
+      currentChain: @state.routerContext.stores.route.getCurrentChain()
 
   render: ->
     return null unless @state.currentChain?

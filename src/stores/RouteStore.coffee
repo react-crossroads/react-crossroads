@@ -1,7 +1,5 @@
 invariant = require 'react/lib/invariant'
-RoutingDispatcher = require '../dispatcher/RoutingDispatcher'
 RouterConstants = require '../constants/RouterConstants'
-LocationStore = require './LocationStore'
 {EventEmitter} = require 'events'
 Crossroads = require 'crossroads'
 merge = require 'react/lib/merge'
@@ -46,9 +44,9 @@ class ActiveHandler
       props.activeRouteHandler(addedProps)
 
 class RouteStore extends EventEmitter
-  constructor: ->
+  constructor: (dispatcher, @locationStore) ->
     @setMaxListeners(0) # Don't limit number of listeners
-    @dispatchToken = RoutingDispatcher.register(@handler)
+    @dispatchToken = dispatcher.register(@handler)
     @router = Crossroads.create()
     @router.routed.add @_route
     @router.bypassed.add @_routeNotFound
@@ -74,15 +72,15 @@ class RouteStore extends EventEmitter
 
   hrefTo: (to, params) =>
     path = @pathTo to, params
-    LocationStore.pathToHref path
+    @locationStore.pathToHref path
 
   start: =>
-    LocationStore.addChangeListener @_locationChanged
+    @locationStore.addChangeListener @_locationChanged
     @_locationChanged()
 
   _locationChanged: =>
-    console.log "Location store update: #{LocationStore.getCurrentPath()}"
-    @router.parse LocationStore.getCurrentPath()
+    console.log "Location store update: #{@locationStore.getCurrentPath()}"
+    @router.parse @locationStore.getCurrentPath()
 
   _route: (request, data) =>
     params = _.zipObject data.route._paramsIds, data.params
@@ -110,4 +108,4 @@ class RouteStore extends EventEmitter
   removeChangeListener: (listener) =>
     @removeListener RouterConstants.CHANGE_EVENT, listener
 
-module.exports = new RouteStore
+module.exports = RouteStore

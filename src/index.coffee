@@ -8,6 +8,8 @@ module.exports =
 
   RouterConstants: require './constants/RouterConstants'
 
+  RouterContext: require './context/RouterContext'
+
   RoutingDispatcher: require './dispatcher/RoutingDispatcher'
 
   LocationStore: require './stores/LocationStore'

@@ -1,7 +1,4 @@
 RouterConstants = require '../constants/RouterConstants'
-RoutingDispatcher = require '../dispatcher/RoutingDispatcher'
-NamedLocations = require '../locations/NamedLocations'
-
 {EventEmitter} = require 'events'
 
 BLOCKED=true
@@ -16,8 +13,8 @@ _isExpectedEvent = (action, path) ->
 
 class LocationStore extends EventEmitter
 
-  constructor: ->
-    @dispatchToken = RoutingDispatcher.register(@handler)
+  constructor: (dispatcher) ->
+    @dispatchToken = dispatcher.register(@handler)
     @_become UNBLOCKED
     @_currentLocationChanged = @_locationChangedDefault
     @_queue = []
@@ -122,4 +119,4 @@ class LocationStore extends EventEmitter
   removeChangeListener: (listener) =>
     @removeListener RouterConstants.CHANGE_EVENT, listener
 
-module.exports = new LocationStore
+module.exports = LocationStore
