@@ -30,6 +30,7 @@ Link = React.createClass
   render: ->
     classes = {}
     classes[@props.activeClassName] = @state.isActive
+    classes[@props.className] = true
 
     <a className={cx classes} href={@getHref()} onClick={@handleRouteTo}>
       {@props.children}
