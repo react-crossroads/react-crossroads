@@ -90,6 +90,27 @@ describe 'Routes', ->
     console.error.firstCall.args[0].message.should.contain '`path`'
     console.error.firstCall.args[0].message.should.contain 'expected `string`'
 
+  it 'exclude prop must be a bool', ->
+    routes =
+      <Routes exclude=true>
+        <Route name='test' handler={Handler} />
+      </Routes>
+    console.error.calledOnce.should.equal false
+
+    routes =
+      <Routes exclude=false>
+        <Route name='test' handler={Handler} />
+      </Routes>
+    console.error.calledOnce.should.equal false
+
+    routes =
+      <Routes exclude=5>
+        <Route name='test' handler={Handler} />
+      </Routes>
+    console.error.calledOnce.should.equal true
+    console.error.firstCall.args[0].message.should.contain '`exclude`'
+    console.error.firstCall.args[0].message.should.contain 'expected `boolean`'
+
   it 'must provide at least one child', ->
     routes = <Routes />
     console.error.calledOnce.should.equal true
@@ -223,3 +244,10 @@ describe 'Routes', ->
         <Route name='test' handler={Handler} />
       </Routes>
     containerDoesNotRegister routes, '/test'
+
+  it 'does not register container when container has a handler, name, or path but is explicitly excluded', ->
+    routes =
+      <Routes handler={Handler} path='/should/override' name='test-name' exclude>
+        <Route name='test' handler={Handler} />
+      </Routes>
+    containerDoesNotRegister routes, '/should/override/test'

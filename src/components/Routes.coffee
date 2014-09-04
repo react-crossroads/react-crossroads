@@ -47,6 +47,7 @@ class Routes extends RouteDefinition
   constructor: (props, @children) ->
     defaultProps =
       handlerProps: {}
+      exclude: false
       # TODO: Primarily here to participate in validation.... Do something better!
       children: @children
 
@@ -62,6 +63,7 @@ class Routes extends RouteDefinition
     name: React.PropTypes.string
     handlerProps: React.PropTypes.object.isRequired
     children: _childrenValid.isRequired
+    exclude: React.PropTypes.bool
 
   register: (parents, routePrefix, routeStore) ->
     {path, chain} = @registrationParts(parents, routePrefix)
@@ -72,6 +74,7 @@ class Routes extends RouteDefinition
     shouldRegister = !@_hasDefault
     shouldRegister = shouldRegister and @_hasPath
     shouldRegister = shouldRegister and @props.handler?
+    shouldRegister = shouldRegister and !@props.exclude
 
     routeStore.register path, chain if shouldRegister
 
