@@ -1,13 +1,19 @@
 React = require 'react'
 LocationStoreComponent = require './location-store-component'
-HistoryLocation = require '../../src/locations/HistoryLocation'
-LocationStore = require '../../src/stores/LocationStore'
 
-LocationStore.setup HistoryLocation, '/history-location-store-app'
+Router = require '../../src/components/Router'
+Route = require '../../src/components/Route'
+
+App = React.createClass
+  displayName: 'App'
+  render: ->
+    <LocationStoreComponent>
+      History Location Store Test
+    </LocationStoreComponent>
 
 React.renderComponent(
-  <LocationStoreComponent>
-    History Location Store Test
-  </LocationStoreComponent>
+  <Router location='history' initialPath='/history-location-store-app'>
+    <Route path='/:path*:' handler={App} />
+  </Router>
   , document.body
 )

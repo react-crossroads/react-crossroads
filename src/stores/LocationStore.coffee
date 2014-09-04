@@ -13,7 +13,7 @@ _isExpectedEvent = (action, path) ->
 
 class LocationStore extends EventEmitter
 
-  constructor: (dispatcher) ->
+  constructor: (dispatcher, @context) ->
     @dispatchToken = dispatcher.register(@handler)
     @_become UNBLOCKED
     @_currentLocationChanged = @_locationChangedDefault
@@ -106,8 +106,7 @@ class LocationStore extends EventEmitter
 
   _locationChangedDefault: (path) =>
     console.log "Location change unexpected"
-    routerActions = require '../actions/RouterActions'
-    routerActions.updateLocation path
+    @context.actions.updateLocation path
   setup: (location, initialPath) =>
     console.warn 'Location has already been setup' if @_location?
     @_location = location

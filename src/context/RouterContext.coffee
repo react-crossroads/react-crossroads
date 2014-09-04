@@ -10,7 +10,7 @@ class RouterContext
     routingDispatcher = new RoutingDispatcher(dispatcher)
 
     @stores =
-      location: new LocationStore routingDispatcher
+      location: new LocationStore routingDispatcher, @
 
     @stores.route = new RouteStore routingDispatcher, @stores.location
 

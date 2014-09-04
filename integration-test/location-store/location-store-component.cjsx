@@ -1,43 +1,43 @@
 React = require 'react'
-RouterActions = require '../../src/actions/RouterActions'
-LocationStore = require '../../src/stores/LocationStore'
 
 LocationStoreComponent = React.createClass
   displayName: 'LocationStoreComponent'
+  contextTypes:
+    router: React.PropTypes.object.isRequired
   getInitialState: ->
-    path: LocationStore.getCurrentPath()
+    path: @context.router.stores.location.getCurrentPath()
   getDesiredPath: ->
     path = @refs.path.getDOMNode().value
   handlePush: ->
-    RouterActions.transition @getDesiredPath()
+    @context.router.actions.transition @getDesiredPath()
   handleReplace: ->
-    RouterActions.replace @getDesiredPath()
+    @context.router.actions.replace @getDesiredPath()
   handleGoBack: ->
-    RouterActions.back()
+    @context.router.actions.back()
   toggleBlocked: ->
-    if LocationStore.isBlocked()
-      RouterActions.unblock()
+    if @context.router.stores.location.isBlocked()
+      @context.router.actions.unblock()
     else
-      RouterActions.block()
+      @context.router.actions.block()
   componentDidMount: ->
-    LocationStore.addChangeListener @pathChanged
+    @context.router.stores.location.addChangeListener @pathChanged
   componentWillUnmount: ->
-    LocationStore.removeChangeListener @pathChanged
+    @context.router.stores.location.removeChangeListener @pathChanged
   pathChanged: ->
     @setState
-      path: LocationStore.getCurrentPath()
-      blocked: LocationStore.isBlocked()
+      path: @context.router.stores.location.getCurrentPath()
+      blocked: @context.router.stores.location.isBlocked()
   push: (path) ->
-    RouterActions.transition path
+    @context.router.actions.transition path
   asyncTransitions: ->
-    RouterActions.transition '/asyncTransitions1'
-    RouterActions.transition '/asyncTransitions2'
-    setTimeout ->
-      RouterActions.transition '/asyncTransitions4'
-      RouterActions.transition '/asyncTransitions5'
-    RouterActions.transition '/asyncTransitions3'
-    setTimeout ->
-      RouterActions.transition '/asyncTransitions6'
+    @context.router.actions.transition '/asyncTransitions1'
+    @context.router.actions.transition '/asyncTransitions2'
+    setTimeout =>
+      @context.router.actions.transition '/asyncTransitions4'
+      @context.router.actions.transition '/asyncTransitions5'
+    @context.router.actions.transition '/asyncTransitions3'
+    setTimeout =>
+      @context.router.actions.transition '/asyncTransitions6'
   render: ->
     <div>
       {@props.children}

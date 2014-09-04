@@ -1,5 +1,4 @@
 React = require 'react'
-RouteStore = require '../stores/RouteStore'
 
 ActiveState =
   contextTypes:

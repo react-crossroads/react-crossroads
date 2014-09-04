@@ -1,7 +1,6 @@
 React = require 'react'
 NamedLocations = require '../locations/NamedLocations'
 Routes = require './Routes'
-NotFoundRoute = require './NotFoundRoute'
 RouterContext = require '../context/RouterContext'
 {Dispatcher} = require 'flux'
 
