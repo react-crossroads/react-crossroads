@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mtscout6/react-crossroads.git"
+    "url": "https://github.com/react-crossroads/react-crossroads.git"
   },
   "keywords": [
     "crossroads",
@@ -26,9 +26,9 @@
   "author": "Matt Smith <mtscout6@gmail.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mtscout6/react-crossroads/issues"
+    "url": "https://github.com/react-crossroads/react-crossroads/issues"
   },
-  "homepage": "https://github.com/mtscout6/react-crossroads",
+  "homepage": "https://github.com/react-crossroads/react-crossroads",
   "devDependencies": {
     "chai": "^1.9.1",
     "chai-as-promised": "^4.1.1",
