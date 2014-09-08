@@ -10,6 +10,7 @@ chai.use(sinonChai)
 
 _.extend global, {_, expect, should, sinon}
 
+require './actions'
 require './components'
 require './dispatcher/RoutingDispatcher'
 require './locations/NamedLocations'

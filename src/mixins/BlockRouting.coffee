@@ -1,9 +1,9 @@
 LocationStore = require '../stores/LocationStore'
 RouterActions = require '../actions/RouterActions'
 
-_getNextBlockId = do ->
-  _nextBlockId = 1
-  -> _nextBlockId++
+getNextBlockId = do ->
+  nextBlockId = 1
+  -> nextBlockId++
 
 BlockRouting =
   getInitialState: ->
@@ -25,7 +25,7 @@ BlockRouting =
       RouterActions.unblock @state.BlockRouting.blockId
       @_setBlock null
     else
-      @_setBlock _getNextBlockId()
+      @_setBlock getNextBlockId()
       RouterActions.block @state.BlockRouting.blockId
 
   _setBlock: (value) ->
