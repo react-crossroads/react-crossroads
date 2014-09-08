@@ -1,4 +1,5 @@
 React = require 'react'
+Logger = require '../utils/logger'
 join = require('path').join
 
 ANONYMOUS = '<<anonymous>>'
@@ -56,7 +57,7 @@ class RouteDefinition
       catch err
         error = err
 
-      console.error error if error?
+      Logger.development.error error if error?
       null
 
   registrationParts: (parents, routePrefix) ->

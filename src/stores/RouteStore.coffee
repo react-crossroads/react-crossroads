@@ -2,6 +2,7 @@ invariant = require 'react/lib/invariant'
 RouterConstants = require '../constants/RouterConstants'
 {EventEmitter} = require 'events'
 Crossroads = require 'crossroads'
+Logger = require '../utils/logger'
 merge = require 'react/lib/merge'
 
 # TODO: Minimize this dependency
@@ -31,7 +32,7 @@ class ActiveHandler
       childFunc = childHandler.activeRouteHandler
     else
       childFunc = ->
-        console.warn "Attempted to render active route child when one did not exist"
+        Logger.development.warn "Attempted to render active route child when one did not exist"
         null
 
     props = merge @handler.props.handlerProps, addedProps
@@ -79,7 +80,7 @@ class RouteStore extends EventEmitter
     @_locationChanged()
 
   _locationChanged: =>
-    console.log "Location store update: #{@locationStore.getCurrentPath()}"
+    Logger.debug.log "Location store update: #{@locationStore.getCurrentPath()}"
     @router.parse @locationStore.getCurrentPath()
 
   _route: (request, data) =>

@@ -1,4 +1,5 @@
 Route = require '../../src/components/Route'
+Logger = require '../../src/utils/logger'
 React = require 'react'
 
 describe 'Route', ->
@@ -6,10 +7,10 @@ describe 'Route', ->
     render: -> <div className='test-handler'></div>
 
   beforeEach ->
-    sinon.stub console, 'error'
+    sinon.stub Logger.development, 'error'
 
   afterEach ->
-    console.error.restore() if console.error.restore
+    Logger.development.error.restore() if Logger.development.error.restore
 
   it 'factory type is Route', ->
     Route.type.should.equal 'Route'
@@ -17,18 +18,18 @@ describe 'Route', ->
   it 'Creates route definition with Route type', ->
     route = Route handler: Handler, name: 'test'
     route.type.should.equal 'Route'
-    console.error.should.not.have.been.called
+    Logger.development.error.should.not.have.been.called
 
   it 'handler prop is required', ->
     route = Route name: 'test'
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain 'Required prop `handler` was not specified'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain 'Required prop `handler` was not specified'
 
   it 'handler prop must be a component class', ->
     route = Route handler: 5, name: 'test'
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain '`handler`'
-    console.error.firstCall.args[0].message.should.contain 'expected a valid React class'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain '`handler`'
+    Logger.development.error.firstCall.args[0].message.should.contain 'expected a valid React class'
 
   it 'handlerProps prop defaults to empty object', ->
     route = Route handler: Handler, name: 'test'
@@ -36,49 +37,49 @@ describe 'Route', ->
 
   it 'handlerProps prop must be an object', ->
     route = Route handler: Handler, name: 'test', handlerProps: 5
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain '`handlerProps`'
-    console.error.firstCall.args[0].message.should.contain 'expected `object`'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain '`handlerProps`'
+    Logger.development.error.firstCall.args[0].message.should.contain 'expected `object`'
 
   it 'name prop must be a string', ->
     route = Route
       handler: Handler
       name: 'some-random-name'
-    console.error.calledOnce.should.equal false
+    Logger.development.error.calledOnce.should.equal false
 
     route = Route
       handler: Handler
       name: 5
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain '`name`'
-    console.error.firstCall.args[0].message.should.contain 'expected `string`'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain '`name`'
+    Logger.development.error.firstCall.args[0].message.should.contain 'expected `string`'
 
   it 'path prop must be a string', ->
     route = Route
       handler: Handler
       path: 'some-random-path'
-    console.error.calledOnce.should.equal false
+    Logger.development.error.calledOnce.should.equal false
 
     route = Route
       handler: Handler
       path: 5
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain '`path`'
-    console.error.firstCall.args[0].message.should.contain 'expected `string`'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain '`path`'
+    Logger.development.error.firstCall.args[0].message.should.contain 'expected `string`'
 
   it 'path or name or both is required', ->
     route = Route
       handler: Handler
       name: 'some-random-name'
       path: 'some-random-path'
-    console.error.calledOnce.should.equal false
+    Logger.development.error.calledOnce.should.equal false
 
     route = Route
       handler: Handler
-    console.error.calledTwice.should.equal true
+    Logger.development.error.calledTwice.should.equal true
 
     _.chain [0, 1]
-      .map (i) -> console.error.getCall(i)
+      .map (i) -> Logger.development.error.getCall(i)
       .each (call) -> call.args[0].message.should.contain 'Must provide either a name, a path or both'
 
   it 'does not support children', ->

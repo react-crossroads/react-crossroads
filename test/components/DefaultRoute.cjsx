@@ -1,4 +1,5 @@
 DefaultRoute = require '../../src/components/DefaultRoute'
+Logger = require '../../src/utils/logger'
 React = require 'react'
 
 describe 'Default Route', ->
@@ -6,10 +7,10 @@ describe 'Default Route', ->
     render: -> <div className='test-handler'></div>
 
   beforeEach ->
-    sinon.stub console, 'error'
+    sinon.stub Logger.development, 'error'
 
   afterEach ->
-    console.error.restore() if console.error.restore
+    Logger.development.error.restore() if Logger.development.error.restore
 
   it 'factory type is DefaultRoute', ->
     DefaultRoute.type.should.equal 'DefaultRoute'
@@ -17,18 +18,18 @@ describe 'Default Route', ->
   it 'Creates route definition with DefaultRoute type', ->
     route = DefaultRoute handler: Handler
     route.type.should.equal 'DefaultRoute'
-    console.error.should.not.have.been.called
+    Logger.development.error.should.not.have.been.called
 
   it 'handler prop is required', ->
     route = DefaultRoute()
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain 'Required prop `handler` was not specified'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain 'Required prop `handler` was not specified'
 
   it 'handler prop must be a component class', ->
     route = DefaultRoute handler: 5
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain '`handler`'
-    console.error.firstCall.args[0].message.should.contain 'expected a valid React class'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain '`handler`'
+    Logger.development.error.firstCall.args[0].message.should.contain 'expected a valid React class'
 
   it 'handlerProps prop defaults to empty object', ->
     route = DefaultRoute handler: Handler
@@ -36,21 +37,21 @@ describe 'Default Route', ->
 
   it 'handlerProps prop must be an object', ->
     route = DefaultRoute handler: Handler, handlerProps: 5
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain '`handlerProps`'
-    console.error.firstCall.args[0].message.should.contain 'expected `object`'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain '`handlerProps`'
+    Logger.development.error.firstCall.args[0].message.should.contain 'expected `object`'
 
   it 'name prop must be a string', ->
     route = DefaultRoute
       handler: Handler
       name: 'some-random-name'
-    console.error.calledOnce.should.equal false
+    Logger.development.error.calledOnce.should.equal false
 
     route = DefaultRoute
       handler: Handler
       name: 5
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain 'expected `string`'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain 'expected `string`'
 
   it 'does not support children', ->
     expect ->

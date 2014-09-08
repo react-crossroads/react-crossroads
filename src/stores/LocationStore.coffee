@@ -1,4 +1,5 @@
 RouterConstants = require '../constants/RouterConstants'
+Logger = require '../utils/logger'
 {EventEmitter} = require 'events'
 
 BLOCKED=true
@@ -28,32 +29,29 @@ class LocationStore extends EventEmitter
 
   handler: (payload) =>
     return unless payload.source == RouterConstants.ROUTER_ACTION
-    console.log "Enqueueing: #{JSON.stringify payload}"
     action = payload.action
     @_queue.push action
     @_processQueue() unless @_changing
 
   _blockedHandler: (action) =>
-    console.log "Blocked Handler"
     switch action.actionType
       when RouterConstants.LOCATION_BLOCK
-        console.warn 'Location store is already blocked'
+        Logger.development.warn 'Location store is already blocked'
       when RouterConstants.LOCATION_UNBLOCK
         @_become UNBLOCKED
         @_emitChange()
       when RouterConstants.LOCATION_CHANGE, RouterConstants.LOCATION_REPLACE, RouterConstants.LOCATION_GOBACK
-        console.warn "Location store is blocked: #{JSON.stringify action}"
+        Logger.development.warn "Location store is blocked: #{JSON.stringify action}"
     true
 
   _unblockedHandler: (action) =>
-    console.log "Unblocked Handler"
     switch action.actionType
       when RouterConstants.LOCATION_BLOCK
         @_become BLOCKED
         @_emitChange()
         true
       when RouterConstants.LOCATION_UNBLOCK
-        console.warn 'Location store is already unblocked'
+        Logger.development.warn 'Location store is already unblocked'
         true
       when RouterConstants.LOCATION_CHANGE
         if action.fromLocationEvent
@@ -73,8 +71,6 @@ class LocationStore extends EventEmitter
 
   _processQueue: =>
     [action, queueTail...] = @_queue
-    console.log "Processing next queue item: #{JSON.stringify action} [Remaining: #{JSON.stringify queueTail}]"
-
     if action and @_currentHandler(action)
       @_queue = queueTail
       @_processQueue()
@@ -90,14 +86,16 @@ class LocationStore extends EventEmitter
 
   _emitChange: => @emit RouterConstants.CHANGE_EVENT
 
+  ###################### Listening to Location ######################
+
   _locationChanged: =>
     @_currentLocationChanged @_location.getCurrentPath()
 
   _locationChangedExpected: (path) =>
-    console.log "Location change expected"
     if !_isExpectedEvent(@_queue[0], path)
       @_locationChangedDefault(path)
     else
+      Logger.debug.log "Location changed by react-crossroads [path: #{path}]"
       @_changing = false
       @_emitChange()
       @_queue.shift()
@@ -105,12 +103,15 @@ class LocationStore extends EventEmitter
       @_processQueue()
 
   _locationChangedDefault: (path) =>
-    console.log "Location change unexpected"
+    Logger.debug.log "Location changed by user [path: #{path}]"
     @context.actions.updateLocation path
+
   setup: (location, initialPath) =>
-    console.warn 'Location has already been setup' if @_location?
+    Location.development.warn 'Location has already been setup' if @_location?
     @_location = location
     @_location.setup @_locationChanged, initialPath
+
+  ###################### End Listening to Location ######################
 
   addChangeListener: (listener) =>
     @on RouterConstants.CHANGE_EVENT, listener

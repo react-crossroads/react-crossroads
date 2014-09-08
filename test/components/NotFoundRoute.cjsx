@@ -1,4 +1,5 @@
 NotFoundRoute = require '../../src/components/NotFoundRoute'
+Logger = require '../../src/utils/logger'
 React = require 'react'
 
 describe 'Not Found Route', ->
@@ -6,10 +7,10 @@ describe 'Not Found Route', ->
     render: -> <div className='test-handler'></div>
 
   beforeEach ->
-    sinon.stub console, 'error'
+    sinon.stub Logger.development, 'error'
 
   afterEach ->
-    console.error.restore() if console.error.restore
+    Logger.development.error.restore() if Logger.development.error.restore
 
   it 'factory type is NotFoundRoute', ->
     NotFoundRoute.type.should.equal 'NotFoundRoute'
@@ -17,18 +18,18 @@ describe 'Not Found Route', ->
   it 'Creates route definition with NotFoundRoute type', ->
     route = NotFoundRoute handler: Handler
     route.type.should.equal 'NotFoundRoute'
-    console.error.should.not.have.been.called
+    Logger.development.error.should.not.have.been.called
 
   it 'handler prop is required', ->
     route = NotFoundRoute()
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain 'Required prop `handler` was not specified'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain 'Required prop `handler` was not specified'
 
   it 'handler prop must be a component class', ->
     route = NotFoundRoute handler: 5
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain '`handler`'
-    console.error.firstCall.args[0].message.should.contain 'expected a valid React class'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain '`handler`'
+    Logger.development.error.firstCall.args[0].message.should.contain 'expected a valid React class'
 
   it 'handlerProps prop defaults to empty object', ->
     route = NotFoundRoute handler: Handler
@@ -36,9 +37,9 @@ describe 'Not Found Route', ->
 
   it 'handlerProps prop must be an object', ->
     route = NotFoundRoute handler: Handler, handlerProps: 5
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain '`handlerProps`'
-    console.error.firstCall.args[0].message.should.contain 'expected `object`'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain '`handlerProps`'
+    Logger.development.error.firstCall.args[0].message.should.contain 'expected `object`'
 
   it 'default path prop is wildcard', ->
     route = NotFoundRoute
@@ -50,13 +51,13 @@ describe 'Not Found Route', ->
     route = NotFoundRoute
       handler: Handler
       path: 'some-random-path'
-    console.error.calledOnce.should.equal false
+    Logger.development.error.calledOnce.should.equal false
 
     route = NotFoundRoute
       handler: Handler
       path: 5
-    console.error.calledOnce.should.equal true
-    console.error.firstCall.args[0].message.should.contain 'expected `string`'
+    Logger.development.error.calledOnce.should.equal true
+    Logger.development.error.firstCall.args[0].message.should.contain 'expected `string`'
 
   it 'does not support children', ->
     expect ->
