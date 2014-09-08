@@ -21,11 +21,11 @@ class LocationStore extends EventEmitter
     @_queue = []
     @_changing = false
 
-  isBlocked: => @_blocked
+  isBlocked: -> @_blocked
 
-  getCurrentPath: => @_location.getCurrentPath()
+  getCurrentPath: -> @_location.getCurrentPath()
 
-  pathToHref: (path) => @_location.pathToHref path
+  pathToHref: (path) -> @_location.pathToHref path
 
   handler: (payload) =>
     return unless payload.source == RouterConstants.ROUTER_ACTION
@@ -33,7 +33,7 @@ class LocationStore extends EventEmitter
     @_queue.push action
     @_processQueue() unless @_changing
 
-  _blockedHandler: (action) =>
+  _blockedHandler: (action) ->
     switch action.actionType
       when RouterConstants.LOCATION_BLOCK
         Logger.development.warn 'Location store is already blocked'
@@ -44,7 +44,7 @@ class LocationStore extends EventEmitter
         Logger.development.warn "Location store is blocked: #{JSON.stringify action}"
     true
 
-  _unblockedHandler: (action) =>
+  _unblockedHandler: (action) ->
     switch action.actionType
       when RouterConstants.LOCATION_BLOCK
         @_become BLOCKED
@@ -69,29 +69,29 @@ class LocationStore extends EventEmitter
       when RouterConstants.LOCATION_ATTEMPT
         throw new Error 'Location store is not blocked!'
 
-  _processQueue: =>
+  _processQueue: ->
     [action, queueTail...] = @_queue
     if action and @_currentHandler(action)
       @_queue = queueTail
       @_processQueue()
 
-  _changeLocation: (func) =>
+  _changeLocation: (func) ->
     @_changing = true
     @_currentLocationChanged = @_locationChangedExpected
     func()
 
-  _become: (blocked) =>
+  _become: (blocked) ->
     @_blocked = blocked
     @_currentHandler = if blocked then @_blockedHandler else @_unblockedHandler
 
-  _emitChange: => @emit RouterConstants.CHANGE_EVENT
+  _emitChange: -> @emit RouterConstants.CHANGE_EVENT
 
   ###################### Listening to Location ######################
 
   _locationChanged: =>
     @_currentLocationChanged @_location.getCurrentPath()
 
-  _locationChangedExpected: (path) =>
+  _locationChangedExpected: (path) ->
     if !_isExpectedEvent(@_queue[0], path)
       @_locationChangedDefault(path)
     else
@@ -102,21 +102,21 @@ class LocationStore extends EventEmitter
       @_currentLocationChanged = @_locationChangedDefault
       @_processQueue()
 
-  _locationChangedDefault: (path) =>
+  _locationChangedDefault: (path) ->
     Logger.debug.log "Location changed by user [path: #{path}]"
     @context.actions.updateLocation path
 
-  setup: (location, initialPath) =>
+  setup: (location, initialPath) ->
     Location.development.warn 'Location has already been setup' if @_location?
     @_location = location
     @_location.setup @_locationChanged, initialPath
 
   ###################### End Listening to Location ######################
 
-  addChangeListener: (listener) =>
+  addChangeListener: (listener) ->
     @on RouterConstants.CHANGE_EVENT, listener
 
-  removeChangeListener: (listener) =>
+  removeChangeListener: (listener) ->
     @removeListener RouterConstants.CHANGE_EVENT, listener
 
 module.exports = LocationStore
