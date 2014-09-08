@@ -20,4 +20,9 @@ module.exports =
   resolve:
     extensions: ['', '.coffee', '.cjsx', '.js']
   plugins: [
+    new webpack.DefinePlugin
+      PRODUCTION: false
+      DEVELOPMENT: true
+      'process.env.NODE_ENV': '"development"'
+      DEBUG_ROUTING: true
   ]
