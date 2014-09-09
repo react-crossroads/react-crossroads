@@ -16,7 +16,7 @@ RouteTo =
     try
       @context.router.stores.route.hrefTo @props.to, @props.params
     catch err
-      consle.error new Error "Failed to acquire href to `#{@props.to}` with parameters #{JSON.stringify @props.params} [#{err.message}]"
+      console.error new Error "Failed to acquire href to `#{@props.to}` with parameters #{JSON.stringify @props.params} [#{err.message}]"
       '#' # Safe fallback...
 
   handleRouteTo: (event) ->
