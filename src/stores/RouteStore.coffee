@@ -1,9 +1,7 @@
-invariant = require 'react/lib/invariant'
 RouterConstants = require '../constants/RouterConstants'
 {EventEmitter} = require 'events'
 Crossroads = require 'crossroads'
 Logger = require '../utils/logger'
-merge = require 'react/lib/merge'
 
 # TODO: Minimize this dependency
 _ = require 'lodash'
@@ -13,36 +11,6 @@ class RouteChain
 
   makePath: (params) ->
     @route.interpolate params
-
-class ActiveChain
-  constructor: (@path, @routeChain, @params) ->
-
-  render: ->
-    handler = new ActiveHandler @routeChain.chain, @params
-    handler.activeRouteHandler()
-
-class ActiveHandler
-  constructor: ([@handler, @chain...], @params) ->
-
-  activeRouteHandler: (addedProps) =>
-    throw new Error 'Cannot pass children to the active route handler' if arguments[1]?
-
-    if @chain.length > 0
-      childHandler = new ActiveHandler @chain, @params
-      childFunc = childHandler.activeRouteHandler
-    else
-      childFunc = ->
-        Logger.development.warn "Attempted to render active route child when one did not exist"
-        null
-
-    props = merge @handler.props.handlerProps, addedProps
-    props.params = @params
-    props.activeRouteHandler = childFunc
-
-    if @handler.props.handler?
-      @handler.props.handler(props)
-    else # This case should only occur when the <Routes /> container does not have a handler
-      props.activeRouteHandler(addedProps)
 
 class RouteStore extends EventEmitter
   constructor: (dispatcher, @locationStore) ->
@@ -84,22 +52,22 @@ class RouteStore extends EventEmitter
     @router.parse @locationStore.getCurrentPath()
 
   _route: (request, data) =>
+    endpoint = data.route.endpoint
     params = _.zipObject data.route._paramsIds, data.params
-    chain = @_routes[data.route.__name__]
-    @_currentChain = new ActiveChain request, chain, params
+    chain = @_routes[endpoint.name]
+    @_currentChain = endpoint.createActiveChain request, chain, params
     @_emitChange()
 
   _routeNotFound: (request) ->
     console.error "404 - Not Found #{request}"
 
   register: (path, chain) =>
-    endHandler = chain[chain.length-1]
-    name = endHandler.props.name || endHandler.props.path
-    throw new Error "Route with duplicate name `#{name}`" if @_routes[name]?
+    [..., endpoint] = chain
+    throw new Error "Route with duplicate name `#{endpoint.name}`" if @_routes[endpoint.name]?
     route = @router.addRoute path
-    route.__name__ = name
+    route.endpoint  = endpoint
 
-    @_routes[name] = new RouteChain path, chain, route
+    @_routes[endpoint.name] = new RouteChain path, chain, route
 
   _emitChange: => @emit RouterConstants.CHANGE_EVENT
 

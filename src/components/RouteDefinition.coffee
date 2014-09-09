@@ -1,5 +1,6 @@
 React = require 'react'
 Logger = require '../utils/logger'
+ActiveChain = require './ActiveChain'
 join = require('path').join
 
 ANONYMOUS = '<<anonymous>>'
@@ -47,6 +48,7 @@ buildPath = (route, prefix) ->
 class RouteDefinition
   constructor: ->
     @validate()
+    @name = @props.name || @props.path
 
   validate: ->
     return unless @propTypes?
@@ -68,6 +70,9 @@ class RouteDefinition
   register: (parents, routePrefix, routeStore) ->
     {path, chain} = @registrationParts(parents, routePrefix)
     routeStore.register path, chain
+
+  createActiveChain: (request, chain, params) ->
+    new ActiveChain request, chain, params
 
 RouteDefinition.PropTypes =
   componentClass: componentClass
