@@ -1,37 +1,41 @@
-LocationStore = require '../stores/LocationStore'
-RouterActions = require '../actions/RouterActions'
+React = require 'react'
 
 getNextBlockId = do ->
   nextBlockId = 1
   -> nextBlockId++
 
 BlockRouting =
+  contextTypes:
+    router: React.PropTypes.object.isRequired
+
   getInitialState: ->
     BlockRouting:
       blockId: null
       blocked: false
 
   componentWillMount: ->
-    LocationStore.addChangeListener @handleLocationStateChange
+    @context.router.stores.location.addChangeListener @handleLocationStateChange
 
   componentWillUnmount: ->
-    LocationStore.removeChangeListener @handleLocationStateChange
+    @context.router.stores.location.removeChangeListener @handleLocationStateChange
 
   handleLocationStateChange: ->
-    console.warn 'TODO: Block Routing Mixin location state change listener'
+    @setState
+      BlockRouting:
+        # TODO: Why do I need to set this?
+        blockId: @state.BlockRouting.blockId
+        blocked: @context.router.stores.location.isBlocked()
 
   toggleBlock: ->
     if @state.BlockRouting.blocked
-      RouterActions.unblock @state.BlockRouting.blockId
-      @_setBlock null
+      @context.router.actions.unblock @state.BlockRouting.blockId
+      @setState
+        BlockRouting:
+          blockId: null
     else
-      @_setBlock getNextBlockId()
-      RouterActions.block @state.BlockRouting.blockId
-
-  _setBlock: (value) ->
-    @setState
-      BlockRouting:
-        blockId: value
-        blocked: value?
+      @setState
+        BlockRouting:
+          blockId: getNextBlockId()
+      @context.router.actions.block @state.BlockRouting.blockId
 
 module.exports = BlockRouting

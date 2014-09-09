@@ -1,53 +1,51 @@
-rewire = require 'rewire'
-BlockRouting = rewire '../../src/mixins/BlockRouting'
+BlockRouting = require '../../src/mixins/BlockRouting'
+merge = require 'react/lib/merge'
 _ = require 'lodash'
 
-buildTestComponent = () ->
+buildTestComponent = (routerContext) ->
   component =
-    state: null
+    context:
+      router: routerContext
+    state: BlockRouting.getInitialState()
     setState: (newState) ->
-      @state = newState
+      @state = merge @state, newState
 
   sinon.spy component, 'setState'
 
   component = _.extend component, BlockRouting
-  component.setState BlockRouting.getInitialState()
+
+  originalToggle = component.toggleBlock
+
+  component.toggleBlock = ->
+    originalToggle.bind(component)()
+    component.handleLocationStateChange.bind(component)()
+
   component
-
-mockLocationStore = ->
-  store =
-    addChangeListener: sinon.stub()
-    removeChangeListener: sinon.stub()
-
-  reset = BlockRouting.__set__('LocationStore', store)
-  [reset, store]
-
-mockRouterActions = ->
-  actions =
-    block: sinon.stub()
-    unblock: sinon.stub()
-
-  reset = BlockRouting.__set__('RouterActions', actions)
-  [reset, actions]
 
 describe 'Block Routing mixin', ->
   component1 = null
   component2 = null
-  locationStoreReset = null
-  routerActionsReset = null
-  locationStore = null
-  routerActions = null
+  blockedIds = null
+  routerContext = null
 
   beforeEach ->
-    [locationStoreReset, locationStore] = mockLocationStore()
-    [routerActionsReset, routerActions] = mockRouterActions()
+    blockedIds = {}
 
-    component1 = buildTestComponent()
-    component2 = buildTestComponent()
+    routerContext =
+      stores:
+        location:
+          addChangeListener: sinon.stub()
+          removeChangeListener: sinon.stub()
+          isBlocked: -> _.any _.values(blockedIds)
+      actions:
+        block: (id) -> blockedIds[id] = true
+        unblock: (id) -> blockedIds[id] = false
 
-  afterEach ->
-    locationStoreReset?()
-    routerActionsReset?()
+    sinon.spy routerContext.actions, 'block'
+    sinon.spy routerContext.actions, 'unblock'
+
+    component1 = buildTestComponent routerContext
+    component2 = buildTestComponent routerContext
 
   it 'not blocked by default', ->
     should.not.exist component1.state.BlockRouting.blockId
@@ -55,25 +53,25 @@ describe 'Block Routing mixin', ->
 
   it 'registers change listener on the location store', ->
     component1.componentWillMount()
-    locationStore.addChangeListener.should.have.been.calledWith component1.handleLocationStateChange
-    locationStore.removeChangeListener.should.not.have.been.called
+    routerContext.stores.location.addChangeListener.should.have.been.calledWith component1.handleLocationStateChange
+    routerContext.stores.location.removeChangeListener.should.not.have.been.called
 
   it 'unregisters change listener on the location store', ->
     component1.componentWillUnmount()
-    locationStore.addChangeListener.should.not.have.been.called
-    locationStore.removeChangeListener.should.have.been.calledWith component1.handleLocationStateChange
+    routerContext.stores.location.addChangeListener.should.not.have.been.called
+    routerContext.stores.location.removeChangeListener.should.have.been.calledWith component1.handleLocationStateChange
 
   it 'toggles blocked state', ->
     component1.toggleBlock()
     blockId = component1.state.BlockRouting.blockId
     blockId.should.be.greaterThan 0
     component1.state.BlockRouting.blocked.should.be.true
-    routerActions.block.should.have.been.calledWith blockId
+    routerContext.actions.block.should.have.been.calledWith blockId
 
     component1.toggleBlock()
     should.not.exist component1.state.BlockRouting.blockId
     component1.state.BlockRouting.blocked.should.be.false
-    routerActions.unblock.should.have.been.calledWith blockId
+    routerContext.actions.unblock.should.have.been.calledWith blockId
 
   it 'increments block id with each toggle', ->
     component1.toggleBlock()

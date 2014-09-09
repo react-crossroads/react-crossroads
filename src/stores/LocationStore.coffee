@@ -1,6 +1,7 @@
 RouterConstants = require '../constants/RouterConstants'
 Logger = require '../utils/logger'
 {EventEmitter} = require 'events'
+_ = require 'lodash'
 
 BLOCKED=true
 UNBLOCKED=false
@@ -20,8 +21,11 @@ class LocationStore extends EventEmitter
     @_currentLocationChanged = @_locationChangedDefault
     @_queue = []
     @_changing = false
+    @_blockedIds = {}
 
-  isBlocked: -> @_blocked
+  isBlocked: -> _.any _.values(@_blockedIds)
+
+  isIdBlocked: (id) -> @_blockedIds[id] || false
 
   getCurrentPath: -> @_location.getCurrentPath()
 
@@ -38,7 +42,8 @@ class LocationStore extends EventEmitter
       when RouterConstants.LOCATION_BLOCK
         Logger.development.warn 'Location store is already blocked'
       when RouterConstants.LOCATION_UNBLOCK
-        @_become UNBLOCKED
+        delete @_blockedIds[action.blockId] if @_blockedIds[action.blockId]?
+        @_become UNBLOCKED unless @isBlocked()
         @_emitChange()
       when RouterConstants.LOCATION_CHANGE, RouterConstants.LOCATION_REPLACE, RouterConstants.LOCATION_GOBACK
         Logger.development.warn "Location store is blocked: #{JSON.stringify action}"
@@ -47,6 +52,10 @@ class LocationStore extends EventEmitter
   _unblockedHandler: (action) ->
     switch action.actionType
       when RouterConstants.LOCATION_BLOCK
+        if @_blockedIds[action.blockId]
+          console.error "Router has already been blocked for id `#{action.blockId}`"
+
+        @_blockedIds[action.blockId] = true
         @_become BLOCKED
         @_emitChange()
         true
@@ -81,7 +90,6 @@ class LocationStore extends EventEmitter
     func()
 
   _become: (blocked) ->
-    @_blocked = blocked
     @_currentHandler = if blocked then @_blockedHandler else @_unblockedHandler
 
   _emitChange: -> @emit RouterConstants.CHANGE_EVENT
@@ -103,6 +111,7 @@ class LocationStore extends EventEmitter
       @_processQueue()
 
   _locationChangedDefault: (path) ->
+    # TODO: if blocked goback, but still send transition attempt event
     Logger.debug.log "Location changed by user [path: #{path}]"
     @context.actions.updateLocation path
 
