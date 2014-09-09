@@ -1,6 +1,7 @@
 React = require 'react'
 Logger = require '../utils/logger'
 ActiveChain = require './ActiveChain'
+RouteChain = require './RouteChain'
 join = require('path').join
 
 ANONYMOUS = '<<anonymous>>'
@@ -73,6 +74,9 @@ class RouteDefinition
 
   createActiveChain: (request, chain, params) ->
     new ActiveChain request, chain, params
+
+  createRouteChain: (path, chain, route) ->
+    new RouteChain path, chain, route
 
 RouteDefinition.PropTypes =
   componentClass: componentClass

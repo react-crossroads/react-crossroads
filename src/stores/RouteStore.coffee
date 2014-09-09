@@ -6,12 +6,6 @@ Logger = require '../utils/logger'
 # TODO: Minimize this dependency
 _ = require 'lodash'
 
-class RouteChain
-  constructor: (@path, @chain, @route) ->
-
-  makePath: (params) ->
-    @route.interpolate params
-
 class RouteStore extends EventEmitter
   constructor: (dispatcher, @locationStore) ->
     @setMaxListeners(0) # Don't limit number of listeners
@@ -67,7 +61,7 @@ class RouteStore extends EventEmitter
     route = @router.addRoute path
     route.endpoint  = endpoint
 
-    @_routes[endpoint.name] = new RouteChain path, chain, route
+    @_routes[endpoint.name] = endpoint.createRouteChain path, chain, route
 
   _emitChange: => @emit RouterConstants.CHANGE_EVENT
 
