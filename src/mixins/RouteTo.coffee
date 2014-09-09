@@ -16,7 +16,8 @@ RouteTo =
     try
       @context.router.stores.route.hrefTo @props.to, @props.params
     catch err
-      throw new Error "Failed to acquire href to `#{@props.to} with parameters #{JSON.stringify @props.params} [#{err.message}]"
+      consle.error new Error "Failed to acquire href to `#{@props.to}` with parameters #{JSON.stringify @props.params} [#{err.message}]"
+      '#' # Safe fallback...
 
   handleRouteTo: (event) ->
     if isModifiedEvent(event) or !isLeftClick(event)
