@@ -12,8 +12,8 @@ class RouterContext
     @stores =
       location: new LocationStore @dispatcher, @
 
-    @stores.route = new RouteStore @dispatcher, @stores.location
-
     @actions = new RouterActions @dispatcher, @stores.location
+
+    @stores.route = new RouteStore @dispatcher, @stores.location, @actions
 
 module.exports = RouterContext

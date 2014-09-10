@@ -7,7 +7,7 @@ Logger = require '../utils/logger'
 _ = require 'lodash'
 
 class RouteStore extends EventEmitter
-  constructor: (dispatcher, @locationStore) ->
+  constructor: (dispatcher, @locationStore, @routerActions) ->
     @setMaxListeners(0) # Don't limit number of listeners
     @dispatchToken = dispatcher.register(@handler)
     @router = Crossroads.create()
@@ -49,6 +49,7 @@ class RouteStore extends EventEmitter
 
   _route: (request, data) =>
     endpoint = data.route.endpoint
+    Logger.debug.log "Route matched `#{request}` to #{endpoint.name}"
     params = _.zipObject data.route._paramsIds, data.params
     @_currentChain = endpoint.createActiveChain request, params
     @_emitChange()
@@ -58,7 +59,7 @@ class RouteStore extends EventEmitter
 
   register: (endpoint) ->
     throw new Error "Route with duplicate name `#{endpoint.name}`" if @_routes[endpoint.name]?
-    route = @router.addRoute endpoint.path
+    route = @router.addRoute endpoint.path, undefined, endpoint.priority || undefined
     route.endpoint = endpoint
     endpoint.route = route
 

@@ -30,6 +30,9 @@ LocationStoreComponent = React.createClass
   handleGoBack: ->
     @context.router.actions.back()
 
+  handleRedirect: ->
+    @context.router.actions.transition '/redirect'
+
   componentDidMount: ->
     @context.router.stores.location.addChangeListener @pathChanged
 
@@ -75,6 +78,7 @@ LocationStoreComponent = React.createClass
       <button id='replace' onClick={@handleReplace}>Replace</button>
       <button id='goback' onClick={@handleGoBack}>Go Back</button>
       <button id='toggleBlock' onClick={@toggleBlock}>{if @state.BlockRouting.blocked then 'Unblock' else 'Block'}</button>
+      <button id='redirect' onClick={@handleRedirect}>Go to /redirect</button>
       <br />
       <button id='quick1' onClick={=> @push '/quick1'}>Quick 1</button>
       <button id='quick2' onClick={=> @push '/quick2'}>Quick 2</button>

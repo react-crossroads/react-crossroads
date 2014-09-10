@@ -2,6 +2,7 @@ React = require 'react'
 NamedLocations = require '../locations/NamedLocations'
 Routes = require './Routes'
 RouterContext = require '../context/RouterContext'
+Logger = require '../utils/logger'
 {Dispatcher} = require 'flux'
 
 Router = React.createClass
@@ -41,6 +42,7 @@ Router = React.createClass
       currentChain: @state.routerContext.stores.route.getCurrentChain()
 
   render: ->
+    Logger.debug.log 'Rendering active chain'
     return null unless @state.currentChain?
     <@state.currentChain.render />
 

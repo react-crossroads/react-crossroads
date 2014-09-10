@@ -11,9 +11,12 @@ LocationAttempt =
       attemptDispatchToken: @context.router.dispatcher.register @locationAttemptHandler
 
   componentWillUnmount: ->
-    @context.router.dispatcher.unregister @state.LocationAttempt.attemptDispatchToken
+    if @state.LocationAttempt.attemptDispatchToken?
+      @context.router.dispatcher.unregister @state.LocationAttempt.attemptDispatchToken
 
   locationAttemptHandler: (payload) ->
+    return unless @isMounted()
+
     @context.router.dispatcher.waitFor [
       @context.router.stores.location.dispatchToken
     ]
