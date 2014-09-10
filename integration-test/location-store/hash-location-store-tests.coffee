@@ -60,3 +60,10 @@ describe 'hash location store', ->
       .then -> driver.findElement(webdriver.By.id('asyncTransitions')).click()
       .then -> assertAsyncUrl 6
       .then -> assertUrl '/', "#{hashUrlPrefix}/"
+
+  it 'redirects from redirect to redirected', ->
+    expect('.current-path').dom.to.have.text '/'
+      .then -> driver.findElement(webdriver.By.id('redirect')).click()
+      .then -> assertUrl '/redirected', "#{hashUrlPrefix}/redirected"
+      .then -> driver.findElement(webdriver.By.id('goback')).click()
+      .then -> assertUrl '/', "#{hashUrlPrefix}/"

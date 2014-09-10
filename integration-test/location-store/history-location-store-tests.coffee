@@ -59,3 +59,12 @@ describe 'history location store', ->
       .then -> driver.findElement(webdriver.By.id('asyncTransitions')).click()
       .then -> assertAsyncUrl 6
       .then -> assertUrl '/', historyRoot
+
+
+  it 'redirects from redirect to redirected', ->
+    expect('.current-path').dom.to.have.text '/'
+      .then -> driver.findElement(webdriver.By.id('redirect')).click()
+      .then -> assertUrl '/redirected', "#{historyRoot}/redirected"
+      .then -> driver.findElement(webdriver.By.id('goback')).click()
+      .then -> assertUrl '/', historyRoot
+
