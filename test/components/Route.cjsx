@@ -102,7 +102,9 @@ describe 'Route', ->
 
     route.register parents, path, store
 
-    store.register.should.have.been.calledWith expPath, [parents..., route]
+    store.register.should.have.been.calledWith route
+    route.path.should.equal expPath
+    route.chain.should.have.members [parents..., route]
 
   it 'registers with parent route prefix and route name', ->
     path = '/home/layer-one/test'

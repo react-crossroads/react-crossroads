@@ -162,7 +162,9 @@ describe 'Routes', ->
 
     routes.register parents, path, store
 
-    store.register.should.have.been.calledWith expPath, [parents..., routes]
+    store.register.should.have.been.calledWith routes
+    routes.path.should.equal expPath
+    routes.chain.should.have.members [parents..., routes]
 
   it 'registers with parent routes prefix and routes name', ->
     path = '/home/layer-one/test'
@@ -216,7 +218,9 @@ describe 'Routes', ->
     routes.register parents, path, store
 
     store.register.callCount.should.equal 1
-    store.register.should.have.been.calledWith expPath, [routes, routes.children[0]]
+    store.register.should.have.been.calledWith routes.children[0]
+    routes.children[0].path.should.equal expPath
+    routes.children[0].chain.should.have.members [routes, routes.children[0]]
 
   it 'does not register container when container does not have a name or path', ->
     routes =
