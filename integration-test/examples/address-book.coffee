@@ -1,7 +1,7 @@
 {assertUrl} = require './helpers'
 addressStore = require '../../examples/address-book/store'
 
-describe 'Address Book Example', ->
+describe.only 'Address Book Example', ->
   expEntries = addressStore.getEntries().map (entry, i) ->
     name: entry.name
     twitter: entry.twitter
@@ -23,8 +23,10 @@ describe 'Address Book Example', ->
     driver.get "#{root}address-book"
       .then -> driver.findElements(webdriver.By.css('.address-entry-link'))
       .then (elements) -> webdriver.promise.map elements, (element) ->
-        webdriver.promise.all [element.getText(), element.getAttribute('href')]
-          .then ([text, href]) -> {text, href}
+        webdriver.promise.all [element.getText(), element.getAttribute('href'), element.getAttribute('class')]
+          .then ([text, href, classes]) ->
+            classes.should.not.contain 'active'
+            {text, href}
       .then (entries) ->
         entries.forEach (entry, i) ->
           entry.text.should.equal expEntries[i].name
