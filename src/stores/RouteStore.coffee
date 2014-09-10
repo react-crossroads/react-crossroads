@@ -59,6 +59,7 @@ class RouteStore extends EventEmitter
 
   register: (endpoint) ->
     throw new Error "Route with duplicate name `#{endpoint.name}`" if @_routes[endpoint.name]?
+    throw new Error "No path provided for `#{endpoint.name}`" unless endpoint.path?
     route = @router.addRoute endpoint.path, undefined, endpoint.priority || undefined
     route.endpoint = endpoint
     endpoint.route = route

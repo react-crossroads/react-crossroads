@@ -72,7 +72,9 @@ describe 'Default Route', ->
 
     route.register parents, path, store
 
-    store.register.should.have.been.calledWith path, [parents..., route]
+    store.register.should.have.been.calledWith route
+    route.path.should.equal path
+    route.chain.should.have.members [parents..., route]
 
   it 'registers with parent route prefix', ->
     expectedRegister DefaultRoute(handler: Handler)
