@@ -1,6 +1,6 @@
 React = require 'react'
 Logger = require '../utils/logger'
-ActiveChain = require './ActiveChain'
+ActiveEndpoint = require './ActiveEndpoint'
 RouteChain = require './RouteChain'
 join = require('path').join
 
@@ -32,20 +32,6 @@ componentClass = do ->
 
   createChainableTypeChecker validate
 
-buildPath = (route, prefix) ->
-  path = route.props.path
-  name = route.props.name
-
-  if path?
-    if path[0] == '/'
-      path
-    else
-      join prefix, path
-  else if name?
-    join prefix, name
-  else
-    prefix
-
 class RouteDefinition
   constructor: ->
     @validate()
@@ -63,20 +49,27 @@ class RouteDefinition
       Logger.development.error error if error?
       null
 
-  registrationParts: (parents, routePrefix) ->
-    path: buildPath(@, routePrefix)
-    chain: [parents..., @]
+  buildPath: ({name, path}, prefix) ->
+    if path?
+      if path[0] == '/'
+        path
+      else
+        join prefix, path
+    else if name?
+      join prefix, name
+    else
+      prefix
 
   # Default registration logic
   register: (parents, routePrefix, routeStore) ->
-    {path, chain} = @registrationParts(parents, routePrefix)
-    routeStore.register path, chain
+    @path = @buildPath @props, routePrefix
+    @chain = [parents..., @]
+    routeStore.register @ # This will set @route
 
-  createActiveChain: (request, chain, params) ->
-    new ActiveChain request, chain, params
+  makePath: (params) -> @route.interpolate params
 
-  createRouteChain: (path, chain, route) ->
-    new RouteChain path, chain, route
+  createActiveChain: (params) ->
+    new ActiveEndpoint @, params
 
 RouteDefinition.PropTypes =
   componentClass: componentClass

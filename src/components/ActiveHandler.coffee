@@ -1,3 +1,4 @@
+Logger = require '../utils/logger'
 merge = require 'react/lib/merge'
 
 class ActiveHandler

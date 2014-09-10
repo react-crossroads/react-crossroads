@@ -66,17 +66,28 @@ class Routes extends RouteDefinition
     exclude: React.PropTypes.bool
 
   register: (parents, routePrefix, routeStore) ->
-    {path, chain} = @registrationParts(parents, routePrefix)
+    @path = @buildPath @props, routePrefix
+
+    @chain = [parents..., @]
 
     for child in @children
-      child.register chain, path, routeStore
+      child.register @chain, @path, routeStore
 
     shouldRegister = !@_hasDefault
     shouldRegister = shouldRegister and @_hasPath
     shouldRegister = shouldRegister and @props.handler?
     shouldRegister = shouldRegister and !@props.exclude
+    # TODO: Added restriction prohibiting registration if a route has already been registered against this container's path
+    # IE
+    # ...
+    # <Route path='/base' handler={BaseHandler} />
+    # <Routes path='/base' handler={BaseHandlerParent}>
+    #   ...
+    # </Routes>
+    # ...
+    # The option currently exists to explicitly exclude the container, but there would be a console error without it
 
-    routeStore.register path, chain if shouldRegister
+    routeStore.register @ if shouldRegister
 
 factory = (props, children...) -> new Routes props, _.flatten(children)
 factory.type = 'Routes'

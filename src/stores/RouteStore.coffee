@@ -23,21 +23,23 @@ class RouteStore extends EventEmitter
 
   getCurrentChain: => @_currentChain
 
-  isActive: (to, params) =>
+  isActive: (to, params) ->
     return false unless @_currentChain?
     path = @pathTo to, params
     path == @_currentChain.path
 
-  pathTo: (to, params) =>
-    chain = @_routes[to]
-    throw new Error "No route defined for `#{to}`" unless chain?
-    chain.makePath params
+  getRoute: (name) -> @_routes[name].route
 
-  hrefTo: (to, params) =>
+  pathTo: (to, params) ->
+    endpoint = @getRoute(to).endpoint
+    throw new Error "No route defined for `#{to}`" unless endpoint?
+    endpoint.makePath params
+
+  hrefTo: (to, params) ->
     path = @pathTo to, params
     @locationStore.pathToHref path
 
-  start: =>
+  start: ->
     @locationStore.addChangeListener @_locationChanged
     @_locationChanged()
 
@@ -48,27 +50,27 @@ class RouteStore extends EventEmitter
   _route: (request, data) =>
     endpoint = data.route.endpoint
     params = _.zipObject data.route._paramsIds, data.params
-    chain = @_routes[endpoint.name]
-    @_currentChain = endpoint.createActiveChain request, chain, params
+    @_currentChain = endpoint.createActiveChain params
     @_emitChange()
 
   _routeNotFound: (request) ->
     console.error "404 - Not Found #{request}"
 
-  register: (path, chain) =>
-    [..., endpoint] = chain
+  register: (endpoint) ->
     throw new Error "Route with duplicate name `#{endpoint.name}`" if @_routes[endpoint.name]?
-    route = @router.addRoute path
-    route.endpoint  = endpoint
+    route = @router.addRoute endpoint.path
+    route.endpoint = endpoint
+    endpoint.route = route
 
-    @_routes[endpoint.name] = endpoint.createRouteChain path, chain, route
+    @_routes[endpoint.name] = endpoint
+    return
 
-  _emitChange: => @emit RouterConstants.CHANGE_EVENT
+  _emitChange: -> @emit RouterConstants.CHANGE_EVENT
 
-  addChangeListener: (listener) =>
+  addChangeListener: (listener) ->
     @on RouterConstants.CHANGE_EVENT, listener
 
-  removeChangeListener: (listener) =>
+  removeChangeListener: (listener) ->
     @removeListener RouterConstants.CHANGE_EVENT, listener
 
 module.exports = RouteStore
