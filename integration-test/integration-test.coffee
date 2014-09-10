@@ -20,6 +20,7 @@ describe 'integration tests', ->
 
   require './locations/location-tests'
   require './location-store'
+  require './examples'
 
 after ->
   driver.quit()

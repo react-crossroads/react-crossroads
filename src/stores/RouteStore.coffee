@@ -50,7 +50,7 @@ class RouteStore extends EventEmitter
   _route: (request, data) =>
     endpoint = data.route.endpoint
     params = _.zipObject data.route._paramsIds, data.params
-    @_currentChain = endpoint.createActiveChain params
+    @_currentChain = endpoint.createActiveChain request, params
     @_emitChange()
 
   _routeNotFound: (request) ->

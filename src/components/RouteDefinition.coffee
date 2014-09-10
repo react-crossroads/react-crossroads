@@ -68,8 +68,8 @@ class RouteDefinition
 
   makePath: (params) -> @route.interpolate params
 
-  createActiveChain: (params) ->
-    new ActiveEndpoint @, params
+  createActiveChain: (path, params) ->
+    new ActiveEndpoint path, @, params
 
 RouteDefinition.PropTypes =
   componentClass: componentClass

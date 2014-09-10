@@ -14,7 +14,7 @@ ActiveState =
     @context.router.stores.route.removeChangeListener @handleActiveStateChange
 
   isActive: (to, params) ->
-    @context.router.stores.route.isActive(to, params)
+    @context.router.stores.route.isActive to, params
 
   handleActiveStateChange: ->
     if @isMounted() and @updateActiveState?

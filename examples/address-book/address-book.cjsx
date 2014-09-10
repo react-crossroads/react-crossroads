@@ -8,13 +8,13 @@ AddressBook = React.createClass
     entries: AddressStore.getEntries()
   render: ->
     entries = @state.entries.map (item, entryId) ->
-      <li key={entryId}>
-        <Link to='address-entry' params={ {entryId} } >{item.name}</Link>
+      <li className='address-entry-item' key={entryId}>
+        <Link className='address-entry-link' to='address-entry' params={ {entryId} } >{item.name}</Link>
       </li>
 
     <div>
       <h2>Address Book Example</h2>
-      <ul>
+      <ul className='address-entry-list'>
         {entries}
       </ul>
       <@props.activeRouteHandler />

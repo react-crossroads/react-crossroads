@@ -12,11 +12,11 @@ Entry = React.createClass
       entry: AddressStore.getEntry props.params.entryId
 
   render: ->
-    <div>
-      <h3>Details for: {@state.entry.name} [{@props.params.entryId}]</h3>
+    <div className='address-entry-details'>
+      <h3>Details for: <span className='address-entry-name'>{@state.entry.name}</span> [{@props.params.entryId}]</h3>
       <dl>
         <dt>Twitter</dt>
-        <dd>{@state.entry.twitter}</dd>
+        <dd className='address-entry-twitter'>{@state.entry.twitter}</dd>
       </dl>
     </div>
 
