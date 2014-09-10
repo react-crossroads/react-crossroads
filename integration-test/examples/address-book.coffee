@@ -1,7 +1,7 @@
 {assertUrl} = require './helpers'
 addressStore = require '../../examples/address-book/store'
 
-describe.only 'Address Book Example', ->
+describe 'Address Book Example', ->
   expEntries = addressStore.getEntries().map (entry, i) ->
     name: entry.name
     twitter: entry.twitter
