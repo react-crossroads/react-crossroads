@@ -60,7 +60,7 @@ class Redirect extends RouteDefinition
         Logger.development.error "Redirect from `#{@props.from}` could not be registered since there are no registered routes by that name."
         return
 
-      fromPath = fromRoute.path
+      fromPath = fromRoute.endpoint.path
 
     @path = fromPath
 

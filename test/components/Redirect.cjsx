@@ -123,10 +123,11 @@ describe 'Redirect', ->
   it 'registers with from route\'s registered path', ->
     from = 'somewhere'
     fromRoute =
-      path: '/home/somewhere'
+      endpoint:
+        path: '/home/somewhere'
 
     redirect = Redirect from: from, to: 'someplace'
-    expectedRegister redirect, fromRoute.path, fromRoute
+    expectedRegister redirect, fromRoute.endpoint.path, fromRoute
 
   it 'registers with relative fromPath prop', ->
     path = '/home/layer-one/somewhere'
