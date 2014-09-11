@@ -8,13 +8,13 @@ LocationAttempt =
 
   getInitialState: ->
     LocationAttempt:
-      attemptDispatchToken: @context.router.dispatcher.register @locationAttemptHandler
+      attemptDispatchToken: @context.router.dispatcher.register @locationAttemptDispatcherHandler
 
   componentWillUnmount: ->
     if @state.LocationAttempt.attemptDispatchToken?
       @context.router.dispatcher.unregister @state.LocationAttempt.attemptDispatchToken
 
-  locationAttemptHandler: (payload) ->
+  locationAttemptDispatcherHandler: (payload) ->
     return unless @isMounted()
 
     @context.router.dispatcher.waitFor [
@@ -32,10 +32,14 @@ LocationAttempt =
       LocationAttempt:
         lastAttempt: lastAttempt
 
+    @handleLocationAttempt() if @handleLocationAttempt
+
   dismissLocationAttempt: ->
     @setState
       LocationAttempt:
         lastAttempt: null
+
+    @handleLocationAttemptDismissed() if @handleLocationAttemptDismissed
 
   # Ensure responsible blocks are removed first
   continueLocationAttempt: ->
