@@ -41,7 +41,7 @@
     "express": "^4.8.5",
     "flux": "^2.0.0",
     "gulp": "^3.8.7",
-    "gulp-cjsx": "^0.3.0",
+    "gulp-cjsx": "^0.4.1",
     "gulp-exit": "0.0.2",
     "gulp-mocha": "^1.0.0",
     "gulp-plumber": "^0.6.5",
