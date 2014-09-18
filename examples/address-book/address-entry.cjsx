@@ -4,12 +4,15 @@ AddressStore = require './store'
 Entry = React.createClass
   displayName: 'Entry'
 
+  contextTypes:
+    store: React.PropTypes.object
+
   getInitialState: ->
-    entry: AddressStore.getEntry @props.params.entryId
+    entry: @context.store.getEntry @props.params.entryId
 
   componentWillReceiveProps: (props) ->
     @setState
-      entry: AddressStore.getEntry props.params.entryId
+      entry: @context.store.getEntry props.params.entryId
 
   render: ->
     <div className='address-entry-details'>

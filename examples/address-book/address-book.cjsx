@@ -4,8 +4,13 @@ AddressStore = require './store'
 
 AddressBook = React.createClass
   displayName: 'AddressBook'
+
+  contextTypes:
+    store: React.PropTypes.object
+
   getInitialState: ->
-    entries: AddressStore.getEntries()
+    entries: @context.store.getEntries()
+
   render: ->
     entries = @state.entries.map (item, entryId) ->
       <li className='address-entry-item' key={entryId}>

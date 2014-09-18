@@ -1,5 +1,6 @@
 {assertUrl} = require './helpers'
-addressStore = require '../../examples/address-book/store'
+AddressBookStore = require '../../examples/address-book/store'
+addressStore = new AddressBookStore
 
 describe 'Address Book Example', ->
   expEntries = addressStore.getEntries().map (entry, i) ->

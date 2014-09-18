@@ -20,4 +20,4 @@ class AddressStore extends EventEmitter
 
   getEntry: (id) => @addresses[id]
 
-module.exports = new AddressStore
+module.exports = AddressStore
