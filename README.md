@@ -16,7 +16,7 @@ If you are actively working on the codebase then open two bash shells, and on th
 $ gulp integration-test-server
 ```
 
-Then you can open the integration test pages in your browser to debug, in your second shell you can run the tests at any time agains that server:
+Then you can open the integration test pages in your browser to debug, in your second shell you can run the tests at any time against that server:
 
 ```bash
 $ gulp integration-test
