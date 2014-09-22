@@ -25,14 +25,21 @@ class RouteStore extends EventEmitter
 
   isActive: (to, params) ->
     return false unless @_currentChain?
-    path = @pathTo to, params
-    path == @_currentChain.path
 
-  getRoute: (name) -> @_routes[name].route
+    try
+      path = @pathTo to, params
+      path == @_currentChain.path
+    catch err
+      console.error err
+      false
+
+  getRoute: (name) ->
+    if name? then @_routes[name].route else undefined
 
   pathTo: (to, params) ->
+    route = @getRoute to
+    throw new Error "No route defined for `#{to}`" unless route?
     endpoint = @getRoute(to).endpoint
-    throw new Error "No route defined for `#{to}`" unless endpoint?
     endpoint.makePath params
 
   hrefTo: (to, params) ->
