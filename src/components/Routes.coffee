@@ -73,6 +73,10 @@ class Routes extends RouteDefinition
     for child in @children
       child.register @chain, @path, routeStore
 
+      if child.type == 'DefaultRoute'
+        @name = child.name
+        @defaultRoute = child
+
     shouldRegister = !@_hasDefault
     shouldRegister = shouldRegister and @_hasPath
     shouldRegister = shouldRegister and @props.handler?
@@ -88,6 +92,14 @@ class Routes extends RouteDefinition
     # The option currently exists to explicitly exclude the container, but there would be a console error without it
 
     routeStore.register @ if shouldRegister
+
+  makePath: (params) ->
+    if @defaultRoute?
+      @defaultRoute.makePath params
+    else if @route?
+      @route.interpolate params
+    else
+      throw new Error 'This routes container was not registered, therefore there is not path to be made from it'
 
 factory = (props, children...) -> new Routes props, _.flatten(children)
 factory.type = 'Routes'
