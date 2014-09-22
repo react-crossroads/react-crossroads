@@ -24,15 +24,8 @@ class RouteStore extends EventEmitter
   getCurrentChain: => @_currentChain
 
   isActive: (to, params) ->
-    return false unless @_currentChain?
+    return false unless @_currentChain? and @_currentChain.isActive?
     @_currentChain.isActive to, params
-
-    #try
-      #path = @pathTo to, params
-      #path == @_currentChain.path
-    #catch err
-      #console.error err
-      #false
 
   getRoute: (name) ->
     if name? then @_routes[name].route else undefined
