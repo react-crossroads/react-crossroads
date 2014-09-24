@@ -30,9 +30,12 @@ class RouteStore extends EventEmitter
   getRoute: (name) ->
     if name? then @_routes[name].route else undefined
 
+  hasRoute: (name) ->
+    if name? then @_routes[name]? else false
+
   pathTo: (to, params) ->
+    throw new Error "No route defined for `#{to}`" unless @hasRoute to
     route = @getRoute to
-    throw new Error "No route defined for `#{to}`" unless route?
     endpoint = @getRoute(to).endpoint
     endpoint.makePath params
 
@@ -59,13 +62,20 @@ class RouteStore extends EventEmitter
     console.error "404 - Not Found #{request}"
 
   register: (endpoint) ->
-    throw new Error "Route with duplicate name `#{endpoint.name}`" if @_routes[endpoint.name]?
+    throw new Error "Route with duplicate name `#{endpoint.name}`" if @hasRoute endpoint.name
     throw new Error "No path provided for `#{endpoint.name}`" unless endpoint.path?
     route = @router.addRoute endpoint.path, undefined, endpoint.priority || undefined
     route.endpoint = endpoint
     endpoint.route = route
 
     @_routes[endpoint.name] = endpoint
+    return
+
+  registerAlias: (aliasEndpoint, destinationEndpoint) ->
+    throw new Error "Route with duplicate name `#{aliasEndpoint.name}`" if @hasRoute aliasEndpoint.name
+    throw new Error "Endpoint `#{destinationEndpoint.name}` has not been registered, cannot create alias" unless destinationEndpoint.route?
+    aliasEndpoint.route = destinationEndpoint.route
+    @_routes[aliasEndpoint.name] = aliasEndpoint
     return
 
   _emitChange: -> @emit RouterConstants.CHANGE_EVENT

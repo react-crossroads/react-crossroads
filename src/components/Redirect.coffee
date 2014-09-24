@@ -4,6 +4,7 @@ Logger = require '../utils/logger'
 RedirectChain = require './RedirectChain'
 pattern = require('crossroads').patternLexer
 merge = require 'react/lib/merge'
+join = require('path').join
 _ = require 'lodash'
 
 TYPE = 'Redirect'
@@ -41,28 +42,26 @@ class Redirect extends RouteDefinition
     to: _onlyOne ['to', 'path']
     path: _onlyOne ['to', 'path']
 
+  resolveRoutePath: (name, path, prefix) ->
+    if path?
+      if path[0] == '/'
+        return path
+      else
+        return join prefix, path
+
+    route = @routeStore.getRoute name
+
+    unless route?
+      Logger.development.error "Redirect to/from `#{name}` could not be registered since there are no registered routes by that name."
+      return
+
+    route.endpoint.path
+
   register: (parents, routePrefix, @routeStore) ->
     @chain = [parents..., @]
-    fromPath = @buildPath
-      name: @props.from
-      path: @props.fromPath
-      , routePrefix
 
-    @toPath = @buildPath
-      name: @props.to
-      path: @props.path
-      , routePrefix
-
-    if @props.from?
-      fromRoute = @routeStore.getRoute @props.from
-
-      unless fromRoute?
-        Logger.development.error "Redirect from `#{@props.from}` could not be registered since there are no registered routes by that name."
-        return
-
-      fromPath = fromRoute.endpoint.path
-
-    @path = fromPath
+    @path   = @resolveRoutePath @props.from, @props.fromPath, routePrefix
+    @toPath = @resolveRoutePath @props.to, @props.path, routePrefix
 
     @routeStore.register @
 

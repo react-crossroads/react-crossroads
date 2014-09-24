@@ -1,5 +1,6 @@
 React = require 'react'
 RouteDefinition = require './RouteDefinition'
+Redirect = require './Redirect'
 merge = require 'react/lib/merge'
 _ = require 'lodash'
 
@@ -74,7 +75,6 @@ class Routes extends RouteDefinition
       child.register @chain, @path, routeStore
 
       if child.type == 'DefaultRoute'
-        @name = child.name
         @defaultRoute = child
 
     shouldRegister = !@_hasDefault
@@ -91,15 +91,27 @@ class Routes extends RouteDefinition
     # ...
     # The option currently exists to explicitly exclude the container, but there would be a console error without it
 
-    routeStore.register @ if shouldRegister
+    if shouldRegister
+      routeStore.register @
+    else if @_hasDefault and !routeStore.hasRoute @name
+      if @defaultRoute.path != @path
+        @redirect = new Redirect
+          fromPath: @path
+          to: @defaultRoute.name
+
+        @redirect.name = @name
+        @redirect.register parents, routePrefix, routeStore
+        @route = @redirect.route
+      else
+        routeStore.registerAlias @, @defaultRoute
 
   makePath: (params) ->
-    if @defaultRoute?
-      @defaultRoute.makePath params
-    else if @route?
+    if @route?
       @route.interpolate params
+    else if @defaultRoute?
+      @defaultRoute.makePath params
     else
-      throw new Error 'This routes container was not registered, therefore there is not path to be made from it'
+      throw new Error 'This routes container was not registered, therefore there is no path to be made from it'
 
 factory = (props, children...) -> new Routes props, _.flatten(children)
 factory.type = 'Routes'

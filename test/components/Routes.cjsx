@@ -256,3 +256,65 @@ describe 'Routes', ->
         <Route name='test' handler={Handler} />
       </Routes>
     containerDoesNotRegister routes, '/should/override/test'
+
+  it 'registers a redirect to the default when the default has a path and a route has not been registered against against the container\'s name yet', ->
+    defaultRoute = <DefaultRoute name='default-route' path='default-route' handler={Handler} />
+    routes =
+      <Routes name='route-container' path='/' handler={Handler}>
+        {defaultRoute}
+      </Routes>
+
+    store =
+      register: sinon.spy()
+      hasRoute: -> false
+      getRoute: (name) ->
+        if routes.name == name
+          endpoint: routes
+        else if defaultRoute.name == name
+          endpoint: defaultRoute
+        else
+          throw 'Unexpected route requested'
+
+    parents = [
+      name: 'home'
+      ,
+      name: 'layer-one'
+    ]
+    path = '/home/layer-one'
+
+    routes.register parents, path, store
+
+    store.register.should.have.been.calledTwice
+
+    store.register.getCall(0).should.have.been.calledWith defaultRoute
+
+    redirect = store.register.getCall(1).args[0]
+    redirect.type.should.equal 'Redirect'
+    redirect.name.should.equal 'route-container'
+    redirect.props.fromPath.should.equal '/'
+    redirect.props.to.should.equal 'default-route'
+
+  it 'registers an alias to the default when the default has the same path', ->
+    defaultRoute = <DefaultRoute name='default-route' handler={Handler} />
+    routes =
+      <Routes name='route-container' path='/' handler={Handler}>
+        {defaultRoute}
+      </Routes>
+
+    store =
+      register: sinon.spy()
+      registerAlias: sinon.spy()
+      hasRoute: -> false
+
+    parents = [
+      name: 'home'
+      ,
+      name: 'layer-one'
+    ]
+    path = '/home/layer-one'
+
+    routes.register parents, path, store
+
+    store.register.should.have.been.calledOnce.and.calledWith defaultRoute
+
+    store.registerAlias.should.have.been.calledOnce.and.calledWith routes, defaultRoute

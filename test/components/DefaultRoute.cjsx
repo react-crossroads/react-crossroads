@@ -1,6 +1,7 @@
 DefaultRoute = require '../../src/components/DefaultRoute'
 Logger = require '../../src/utils/logger'
 React = require 'react'
+join = require('path').join
 
 describe 'Default Route', ->
   Handler = React.createClass
@@ -45,7 +46,7 @@ describe 'Default Route', ->
     route = DefaultRoute
       handler: Handler
       name: 'some-random-name'
-    Logger.development.error.calledOnce.should.equal false
+    Logger.development.error.should.not.have.been.called
 
     route = DefaultRoute
       handler: Handler
@@ -65,21 +66,38 @@ describe 'Default Route', ->
       register: sinon.spy()
     parents = [
       name: 'home'
-      ,
+     ,
       name: 'layer-one'
     ]
     path = '/home/layer-one'
 
     route.register parents, path, store
 
+    expPath =
+      if route.path?
+        if route.path[0] == '/'
+          route.path
+        else
+          join path, route.path
+      else
+        path
+
     store.register.should.have.been.calledWith route
-    route.path.should.equal path
+
+    Logger.development.error.should.not.have.been.called
+
+    route.path.should.equal expPath
     route.chain.should.have.members [parents..., route]
 
   it 'registers with parent route prefix', ->
-    expectedRegister DefaultRoute(handler: Handler)
+    expectedRegister DefaultRoute handler: Handler
 
-  it 'registers with parent route prefix ignores path', ->
-    expectedRegister DefaultRoute(handler: Handler, path: '/should/ignore')
+  it 'registers with relative path', ->
+    expectedRegister DefaultRoute
+      handler: Handler
+      path: 'downstream/path'
 
-
+  it 'registers with absolute path', ->
+    expectedRegister DefaultRoute
+      handler: Handler
+      path: '/custom/path'

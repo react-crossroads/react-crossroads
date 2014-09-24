@@ -10,6 +10,7 @@ class DefaultRoute extends RouteDefinition
   constructor: (props) ->
     defaultProps =
       handlerProps: {}
+      path: ''
 
     @props = merge defaultProps, props
     super()
@@ -17,13 +18,8 @@ class DefaultRoute extends RouteDefinition
   propTypes:
     handler: RouteDefinition.PropTypes.componentClass.isRequired
     name: React.PropTypes.string
+    path: React.PropTypes.string
     handlerProps: React.PropTypes.object.isRequired
-
-  # TODO: Add integration tests for this
-  register: (parents, routePrefix, routeStore) ->
-    @path = routePrefix
-    @chain = [parents..., @]
-    routeStore.register @
 
 factory = (props) ->
   throw new Error 'DefaultRoute does not support children, use <Routes /> instead' if arguments.length > 1

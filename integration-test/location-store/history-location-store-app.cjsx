@@ -1,4 +1,5 @@
-React = require 'react'
+React = require 'react/addons'
+global.React = React
 LocationStoreComponent = require './location-store-component'
 
 Router = require '../../src/components/Router'

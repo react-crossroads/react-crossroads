@@ -96,45 +96,61 @@ describe 'Redirect', ->
         , <Handler />
     .to.throw /does not support children/
 
-  expectedRegister = (redirect, expPath, fromRoute) ->
+  expectedRegister = (redirect, expPath, routes) ->
+    routes = routes || {}
     store =
       register: sinon.spy()
 
-    store.getRoute = sinon.stub().returns(fromRoute) if redirect.props.from?
+    store.getRoute = (name) -> routes[name]
+    sinon.spy store, 'getRoute'
 
     parents = [
       name: 'home'
-      ,
+     ,
       name: 'layer-one'
     ]
     path = '/home/layer-one'
 
     redirect.register parents, path, store
 
-    store.register.should.have.been.calledWith redirect
+    store.register.should.have.been.calledOnce.and.calledWith redirect
     redirect.path.should.equal expPath
     redirect.chain.should.have.members [parents..., redirect]
     Logger.development.error.called.should.equal false
 
-    if redirect.props.from?
-      store.getRoute.should.have.been.calledOnce
-      store.getRoute.should.have.been.calledWith redirect.props.from
+    ['to', 'from'].forEach (type) ->
+      if redirect.props[type]?
+        store.getRoute.should.have.been.calledWith redirect.props[type]
 
-  it 'registers with from route\'s registered path', ->
+  it "registers with from route's registered path", ->
     from = 'somewhere'
-    fromRoute =
-      endpoint:
-        path: '/home/somewhere'
+    routes =
+      somewhere:
+        endpoint:
+          path: '/home/somewhere'
+      someplace:
+        endpoint:
+          path: '/home/someplace'
 
     redirect = Redirect from: from, to: 'someplace'
-    expectedRegister redirect, fromRoute.endpoint.path, fromRoute
+    expectedRegister redirect, routes[from].endpoint.path, routes
 
   it 'registers with relative fromPath prop', ->
+    routes =
+      someplace:
+        endpoint:
+          path: '/home/someplace'
+
     path = '/home/layer-one/somewhere'
     redirect = Redirect fromPath: 'somewhere', to: 'someplace'
-    expectedRegister redirect, path
+    expectedRegister redirect, path, routes
 
   it 'registers with absolute fromPath prop', ->
+    routes =
+      someplace:
+        endpoint:
+          path: '/home/someplace'
+
     path = '/home/somewhere'
     redirect = Redirect fromPath: path, to: 'someplace'
-    expectedRegister redirect, path
+    expectedRegister redirect, path, routes
