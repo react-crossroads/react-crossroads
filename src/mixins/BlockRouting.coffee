@@ -20,11 +20,11 @@ BlockRouting =
     @context.router.stores.location.removeChangeListener @handleLocationStateChange
 
   handleLocationStateChange: ->
-    @setState
-      BlockRouting:
-        # TODO: Why do I need to set this?
-        blockId: @state.BlockRouting.blockId
-        blocked: @context.router.stores.location.isBlocked()
+    if @isMounted()
+      @setState
+        BlockRouting:
+          blockId: @state.BlockRouting.blockId # TODO: Why do I need to set this?
+          blocked: @context.router.stores.location.isBlocked()
 
   toggleBlock: ->
     if @state.BlockRouting.blocked

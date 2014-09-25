@@ -9,6 +9,7 @@ buildTestComponent = (routerContext) ->
     state: BlockRouting.getInitialState()
     setState: (newState) ->
       @state = merge @state, newState
+    isMounted: -> true
 
   sinon.spy component, 'setState'
 
@@ -87,3 +88,8 @@ describe 'Block Routing mixin', ->
     component2Id = component2.state.BlockRouting.blockId
 
     component1Id.should.equal component2Id - 1
+
+  it 'does not set state if not mounted', ->
+    component1.isMounted = -> false
+    component1.toggleBlock()
+    component1.setState.should.have.been.calledOnce # Is only called in toggleBlock not in handleLocationStateChange
