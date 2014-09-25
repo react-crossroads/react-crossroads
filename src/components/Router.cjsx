@@ -15,12 +15,15 @@ Router = React.createClass
   childContextTypes:
     router: React.PropTypes.object.isRequired
 
+  contextTypes:
+    dispatcher: React.PropTypes.object
+
   getChildContext: ->
     router: @state.routerContext
 
   getInitialState: ->
-    # TODO: pull dispatcher from props first?
-    routerContext = new RouterContext( new Dispatcher() )
+    dispatcher = @props.dispatcher || @context.dispatcher || new Dispatcher()
+    routerContext = new RouterContext dispatcher
     <Routes path='/'>{@props.children}</Routes>.register [], '', routerContext.stores.route
 
     routesRegistered: true
