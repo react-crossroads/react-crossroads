@@ -1,5 +1,6 @@
 require './DefaultRoute'
 require './NotFoundRoute'
 require './Redirect'
+require './RedirectChain'
 require './Route'
 require './Routes'
