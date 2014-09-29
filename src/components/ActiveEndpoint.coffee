@@ -4,7 +4,7 @@ _ = require 'lodash'
 class ActiveEndpoint
   constructor: (@path, @endpoint, @params) ->
 
-  render: ->
+  render: =>
     rootHandler = new ActiveHandler @endpoint.chain, @params
     rootHandler.activeRouteHandler()
 
