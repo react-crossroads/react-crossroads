@@ -2,6 +2,7 @@ Routes = require '../../src/components/Routes'
 Route = require '../../src/components/Route'
 DefaultRoute = require '../../src/components/DefaultRoute'
 NotFoundRoute = require '../../src/components/NotFoundRoute'
+Redirect = require '../../src/components/Redirect'
 Logger = require '../../src/utils/logger'
 React = require 'react'
 
@@ -126,6 +127,7 @@ describe 'Routes', ->
         <Routes>
           <Route name='sub-test' handler={Handler} />
         </Routes>
+        <Redirect fromPath='/somewhere' toPath='/someplace' />
       </Routes>
     Logger.development.error.calledOnce.should.equal false
 

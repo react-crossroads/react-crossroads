@@ -12,6 +12,7 @@ _childrenValid = do ->
     'Routes'
     'DefaultRoute'
     'NotFoundRoute'
+    'Redirect'
   ]
 
   validate = (props, propName, componentName) ->
