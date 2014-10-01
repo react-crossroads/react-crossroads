@@ -12,7 +12,7 @@ class RouterContext
     @stores =
       location: new LocationStore @dispatcher, @
 
-    @actions = new RouterActions @dispatcher, @stores.location
+    @actions = new RouterActions @dispatcher, @stores
 
     @stores.route = new RouteStore @dispatcher, @stores.location, @actions
 

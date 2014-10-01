@@ -1,27 +1,40 @@
 RouterConstants = require '../constants/RouterConstants'
 Logger = require '../utils/logger'
+pattern = require('crossroads').patternLexer
+
+isAbsoluteUrl = (url) -> typeof url == 'string' and /^https?:\/\//.test url
 
 class RouterActions
-  constructor: (@dispatcher, @locationStore) ->
+  constructor: (@dispatcher, @stores) ->
 
   _dispatch: (action) ->
-    if @locationStore.isBlocked()
+    if @stores.location.isBlocked()
       action =
         actionType: RouterConstants.LOCATION_ATTEMPT
         originalAction: action
 
     @dispatcher.handleRouteAction action
 
-  # TODO: Build path with to, params, query
-  transition: (path) ->
+  _resolvePath: (to, params) ->
+    switch
+      when isAbsoluteUrl to
+        to
+      when @stores.route.hasRoute to
+        @stores.route.pathTo to, params
+      else
+        pattern.interpolate to, params
+
+  transition: (to, params) ->
+    path = @_resolvePath to, params
+
     Logger.debug.log "RouterActions.transition(#{path})"
     @_dispatch
       actionType: RouterConstants.LOCATION_CHANGE
       path: path
       fromLocationEvent: false
 
-  # TODO: Build path with to, params, query
-  replace: (path) ->
+  replace: (to, params) ->
+    path = @_resolvePath to, params
     Logger.debug.log "RouterActions.replace(#{path})"
     @_dispatch
       actionType: RouterConstants.LOCATION_REPLACE
