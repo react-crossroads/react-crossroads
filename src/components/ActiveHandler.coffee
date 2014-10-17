@@ -18,6 +18,7 @@ class ActiveHandler
     props = merge @endpoint.props.handlerProps, addedProps
     props.params = @params
     props.activeRouteHandler = childFunc
+    props.ref = 'activeRouteHandler'
 
     if @endpoint.props.handler?
       @endpoint.props.handler(props)
