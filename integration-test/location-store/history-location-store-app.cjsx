@@ -14,7 +14,7 @@ App = React.createClass
     </LocationStoreComponent>
 
 React.renderComponent(
-  <Router location='history' initialPath='/history-location-store-app'>
+  <Router location='history' rootPath='/history-location-store-app'>
     <Route path='/:path*:' handler={App} />
     <Redirect fromPath='/redirect' path='/redirected' />
   </Router>

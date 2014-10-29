@@ -5,6 +5,7 @@ module.exports =
   cache: true
   entry:
     'address-book': './examples/address-book/app.cjsx'
+    'nested-routers': './examples/nested-routers/app.cjsx'
   output:
     path: path.join __dirname, 'examples-build'
     filename: '[name].js'

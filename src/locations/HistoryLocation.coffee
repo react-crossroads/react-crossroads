@@ -4,8 +4,8 @@ ExecutionEnvironment = require 'react/lib/ExecutionEnvironment'
 join = require('path').join
 
 _onChange = null
-_initialPath = null
-_initialPathRgx = null
+_rootPath = null
+_rootPathRgx = null
 
 _isSupported = ->
   # Taken from Modernizr
@@ -21,14 +21,14 @@ _isSupported = ->
 # Location handler that uses HTML5 history.
 HistoryLocation =
 
-  setup: (onChange, initialPath) ->
+  setup: (onChange, rootPath) ->
     invariant(
       ExecutionEnvironment.canUseDOM,
       'You cannot use HistoryLocation in an environment with no DOM'
     )
 
-    _initialPath = initialPath || ''
-    _initialPathRgx = new RegExp "^#{initialPath || ''}"
+    _rootPath = rootPath || ''
+    _rootPathRgx = new RegExp "^#{rootPath || ''}"
 
     _onChange = onChange
 
@@ -44,12 +44,12 @@ HistoryLocation =
       window.detachEvent 'popstate', _onChange
 
   push: (path) ->
-    path = join _initialPath, path
+    path = join _rootPath, path
     window.history.pushState { path }, '', path
     _onChange()
 
   replace: (path) ->
-    path = join _initialPath, path
+    path = join _rootPath, path
     window.history.replaceState { path }, '', path
     _onChange()
 
@@ -58,7 +58,7 @@ HistoryLocation =
 
   getCurrentPath: ->
     path = getWindowPath()
-    path = path.replace _initialPathRgx, ''
+    path = path.replace _rootPathRgx, ''
 
     if path == '' then '/' else path
 
@@ -66,7 +66,7 @@ HistoryLocation =
     return 'memory' unless ExecutionEnvironment.canUseDOM
     if _isSupported() then true else 'refresh'
 
-  pathToHref: (path) -> join _initialPath, path
+  pathToHref: (path) -> join _rootPath, path
 
   toString: ->
     '<HistoryLocation>'

@@ -115,10 +115,10 @@ class LocationStore extends EventEmitter
     Logger.debug.log "Location changed by user [path: #{path}]"
     @context.actions.updateLocation path
 
-  setup: (location, initialPath) ->
+  setup: (location, rootPath, initialPath) ->
     Location.development.warn 'Location has already been setup' if @_location?
     @_location = location
-    @_location.setup @_locationChanged, initialPath
+    @_location.setup @_locationChanged, rootPath, initialPath
 
   ###################### End Listening to Location ######################
 
