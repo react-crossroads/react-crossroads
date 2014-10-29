@@ -23,6 +23,10 @@ exports.startServer = (config, callback) ->
     url = "#{config.webpackServerAddress}/address-book"
     request(url).pipe(res)
 
+  app.get '/nested-routers*', (req, res) ->
+    url = "#{config.webpackServerAddress}/nested-routers"
+    request(url).pipe(res)
+
   config.modifyApp app if config.modifyApp?
 
   app.get '/', (req, res) ->

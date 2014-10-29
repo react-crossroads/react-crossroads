@@ -3,28 +3,28 @@ getWindowPath = require './getWindowPath'
 ExecutionEnvironment = require 'react/lib/ExecutionEnvironment'
 join = require('path').join
 
-_initialPath = null
-_initialPathRgx = null
+_rootPath = null
+_rootPathRgx = null
 
 # Location handler that uses full page refreshes. This is
 # used as the fallback for HistoryLocation in browsers that
 # do not support the HTML5 history API.
 RefreshLocation =
-  setup: (onChange, initialPath) ->
+  setup: (onChange, rootPath) ->
     invariant(
       ExecutionEnvironment.canUseDOM,
       'You cannot use RefreshLocation in an environment with no DOM'
     )
 
-    _initialPath = initialPath || ''
-    _initialPathRgx = new RegExp "^#{initialPath || ''}"
+    _rootPath = rootPath || ''
+    _rootPathRgx = new RegExp "^#{rootPath || ''}"
 
   push: (path) ->
-    path = join _initialPath, path
+    path = join _rootPath, path
     window.location = path
 
   replace: (path) ->
-    path = join _initialPath, path
+    path = join _rootPath, path
     window.location.replace(path)
 
   pop: ->
@@ -32,14 +32,14 @@ RefreshLocation =
 
   getCurrentPath: ->
     path = getWindowPath()
-    path = path.replace _initialPathRgx, ''
+    path = path.replace _rootPathRgx, ''
 
     if path == '' then '/' else path
 
   isSupportedOrFallback: ->
     if ExecutionEnvironment.canUseDOM then true else 'memory'
 
-  pathToHref: (path) -> join _initialPath, path
+  pathToHref: (path) -> join _rootPath, path
 
   toString: -> '<RefreshLocation>'
 

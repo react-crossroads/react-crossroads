@@ -3,7 +3,7 @@ React = require 'react'
 LocationApp = React.createClass
   displayName: 'LocationApp'
   getInitialState: ->
-    @props.location.setup @urlChange, @props.initialPath
+    @props.location.setup @urlChange, @props.rootPath
 
     url: @props.location.getCurrentPath()
   getDesiredPath: ->

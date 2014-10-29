@@ -10,7 +10,7 @@ Router = React.createClass
 
   getDefaultProps: ->
     location: 'hash'
-    initialPath: ''
+    rootPath: ''
 
   childContextTypes:
     router: React.PropTypes.object.isRequired
@@ -31,11 +31,11 @@ Router = React.createClass
 
   propTypes:
     location: React.PropTypes.string.isRequired
-    initialPath: React.PropTypes.string.isRequired
+    rootPath: React.PropTypes.string.isRequired
 
   componentWillMount: ->
     location = NamedLocations.locationFor @props.location
-    @state.routerContext.stores.location.setup location, @props.initialPath
+    @state.routerContext.stores.location.setup location, @props.rootPath, @props.initialPath
 
     @state.routerContext.stores.route.addChangeListener @routeChanged
     @state.routerContext.stores.route.start()

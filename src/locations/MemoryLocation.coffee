@@ -1,10 +1,12 @@
 invariant = require('react/lib/invariant')
 
 _onChange = null
+_currentPath = null
 
 # Location handler that does not require a DOM.
 MemoryLocation =
-  setup: (onChange) ->
+  setup: (onChange, rootPath, initialPath) ->
+    _currentPath = initialPath || '/'
     _onChange = onChange
 
   push: (path) ->
